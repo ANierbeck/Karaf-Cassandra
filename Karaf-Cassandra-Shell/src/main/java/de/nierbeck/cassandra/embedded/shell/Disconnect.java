@@ -8,7 +8,7 @@ import com.datastax.driver.core.Session;
 
 @Command(scope = "cassandra", name = "disconnect", description = "Disconnect from cassandra server")
 @Service
-public class DisConnect extends CassandraCommandSupport {
+public class Disconnect extends CassandraCommandSupport {
 
 	@Override
 	public Object doExecute() throws Exception {
@@ -23,11 +23,19 @@ public class DisConnect extends CassandraCommandSupport {
 		Cluster cluster = (Cluster) this.session.get(CASSANDRA_CLUSTER);
 		Session session = (Session) this.session.get(CASSANDRA_SESSION);
 
-		session.close();
-		cluster.close();
+		if (session == null) {
+			System.err.println("No active session found!");
+		} else {
+			session.close();
+			this.session.put(CASSANDRA_SESSION, null);
+		}
 
-		this.session.put(CASSANDRA_CLUSTER, null);
-		this.session.put(CASSANDRA_SESSION, null);
+		if (cluster == null) {
+			System.err.println("No active cluster connection found!");
+		} else {
+			cluster.close();
+			this.session.put(CASSANDRA_CLUSTER, null);
+		}
 
 	}
 }
