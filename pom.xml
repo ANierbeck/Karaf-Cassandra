@@ -7,5 +7,6 @@
   <packaging>pom</packaging>
   <modules>
     <module>Karaf-Cassandra-Embedded</module>
+    <module>Karaf-Cassandra-Shell</module>
   </modules>
 </project>
