@@ -4,4 +4,8 @@ public interface CassandraService {
 
 	boolean isRunning();
 
+	void stop();
+
+	void start();
+
 }

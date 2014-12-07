@@ -8,5 +8,6 @@
   <modules>
     <module>Karaf-Cassandra-Embedded</module>
     <module>Karaf-Cassandra-Shell</module>
+    <module>Karaf-Cassandra-Service</module>
   </modules>
 </project>
