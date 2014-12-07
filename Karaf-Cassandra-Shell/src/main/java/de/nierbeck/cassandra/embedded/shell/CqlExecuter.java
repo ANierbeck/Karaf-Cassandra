@@ -22,6 +22,10 @@ public class CqlExecuter extends CassandraCommandSupport {
 
 		Session session = (Session) this.session.get(CASSANDRA_SESSION);
 
+		if (session == null) {
+			System.err.println("No active session found--run the connect command first");
+		}
+
 		ResultSet execute = session.execute(cql);
 
 		boolean isFirst = true;
