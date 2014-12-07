@@ -3,7 +3,6 @@ package de.nierbeck.cassandra.embedded.impl;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
-import org.apache.cassandra.service.CassandraDaemon.Server;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;

@@ -1,21 +1,21 @@
-package de.nierbeck.cassandra.embedded.shell.admin;
+package de.nierbeck.cassandra.admin.shell;
 
+import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
-import org.apache.karaf.util.tracker.RequireService;
 
 import de.nierbeck.cassandra.embedded.CassandraService;
-import de.nierbeck.cassandra.embedded.shell.CassandraCommandSupport;
 
-@Command(scope = "cassandra/admin", name = "stop", description = "Connect to cassandra server")
+@Command(scope = "cassandra-admin", name = "stop", description = "Connect to cassandra server")
 @Service
-public class StopService extends CassandraCommandSupport {
+public class StopService implements Action {
 
-	@RequireService(CassandraService.class)
+	@Reference
 	CassandraService cassandraServer;
 
 	@Override
-	public Object doExecute() throws Exception {
+	public Object execute() throws Exception {
 		if (!cassandraServer.isRunning()) {
 			System.err.println("No runnung embedded Cassandra service found");
 			return null;

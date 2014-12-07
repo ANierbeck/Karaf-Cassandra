@@ -22,7 +22,20 @@
 			<scope>provided</scope>
 			<version>5.0.0</version>
 		</dependency>
-		
+		        
+        <dependency>
+            <groupId>org.apache.karaf</groupId>
+            <artifactId>org.apache.karaf.util</artifactId>
+            <version>4.0.0.M1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.karaf.shell</groupId>
+            <artifactId>org.apache.karaf.shell.core</artifactId>
+            <version>4.0.0.M1</version>
+            <optional>true</optional>
+        </dependency>
+        
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>Karaf-Cassandra-Service</artifactId>
@@ -124,6 +137,7 @@
 					<instructions>
 						<Bundle-Activator>de.nierbeck.cassandra.embedded.impl.Activator</Bundle-Activator>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<Karaf-Commands>de.nierbeck.cassandra.embedded.shell.admin*</Karaf-Commands>
 						<Import-Package>
 							org.slf4j.*,
 							org.osgi.framework.*,
