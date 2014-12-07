@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<features name="${project.artifactId}-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.3.0" >
+    
+    <feature name='Karaf-Cassandra-Client' description='${project.name}' version='${project.version}'>
+        <bundle>mvn:com.codahale.metrics/metrics-core/3.0.2</bundle>
+        <bundle>mvn:com.datastax.cassandra/cassandra-driver-core/2.1.3</bundle>
+        <bundle>mvn:com.google.guava/guava/14.0.1</bundle>
+        <bundle>mvn:io.netty/netty/3.9.0.Final</bundle>
+    </feature>
+
+	<feature name='Karaf-Cassandra-Embedded' description='${project.name}' version='${project.version}'	>
+		<bundle>mvn:de.nierbeck.cassandra/Karaf-Cassandra-Service/${project.version}</bundle>
+		<bundle>mvn:de.nierbeck.cassandra/Karaf-Cassandra-Embedde/${project.version}</bundle>
+		<bundle>mvn:de.nierbeck.cassandra/Karaf-Cassandra-Admin/${project.version}</bundle>
+	</feature>
+
+	<feature name="Karaf-Cassandra-Shell" version="${project.version}">
+		<feature>Karaf-Cassandra-Client</feature>
+		<bundle>mvn:de.nierbeck.cassandra/Karaf-Cassandra-Shell/${project.version}</bundle>
+	</feature>
+</features>

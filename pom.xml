@@ -10,5 +10,6 @@
     <module>Karaf-Cassandra-Shell</module>
     <module>Karaf-Cassandra-Service</module>
     <module>Karaf-Cassandra-Admin</module>
+    <module>Karaf-Cassandra-Feature</module>
   </modules>
 </project>
