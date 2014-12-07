@@ -1,8 +1,15 @@
 package de.nierbeck.cassandra.embedded.impl;
 
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.util.Dictionary;
 import java.util.List;
+
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanRegistrationException;
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 
 import me.prettyprint.cassandra.service.CassandraHostConfigurator;
 import me.prettyprint.hector.api.Cluster;
@@ -39,7 +46,8 @@ public class OsgiEmbeddedCassandra implements Server, CassandraService,
 			return false;
 
 		return (cassandraDaemon.nativeServer != null && cassandraDaemon.nativeServer
-				.isRunning()) || (cassandraDaemon.thriftServer != null && cassandraDaemon.thriftServer
+				.isRunning())
+				|| (cassandraDaemon.thriftServer != null && cassandraDaemon.thriftServer
 						.isRunning());
 	}
 
@@ -47,13 +55,9 @@ public class OsgiEmbeddedCassandra implements Server, CassandraService,
 	public void start() {
 		logger.info("starting Cassandra in Embedded mode");
 
-		// TODO: let it be configured through config admin service.
-		// System.setProperty("cassandra.config",
-		// "file:src/main/resources/cassandra.yaml");
 		if (cassandraConfig != null) {
 			System.setProperty("cassandra.config", "file://" + cassandraConfig);
 		}
-
 		System.setProperty("cassandra-foreground", "false");
 
 		cassandraDaemon = new CassandraDaemon();
@@ -72,8 +76,8 @@ public class OsgiEmbeddedCassandra implements Server, CassandraService,
 	@Override
 	public void stop() {
 		logger.info("Stopping cassandra deamon");
-		logger.info("dropping keyspace");
-		dropKeyspaces();
+		// logger.info("dropping keyspace");
+		// dropKeyspaces();
 		logger.info("cleaning up the Schema keys");
 		Schema.instance.clear();
 		logger.info("stopping cassandra");
@@ -82,6 +86,17 @@ public class OsgiEmbeddedCassandra implements Server, CassandraService,
 		cassandraDaemon.destroy();
 		logger.info("cassndra is removed");
 		cassandraDaemon = null;
+
+		logger.info("removing MBean");
+		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+		try {
+			mbs.unregisterMBean(new ObjectName(
+					"org.apache.cassandra.db:type=DynamicEndpointSnitch"));
+		} catch (MBeanRegistrationException | InstanceNotFoundException
+				| MalformedObjectNameException e) {
+			logger.warn("Couldn't remove MBean");
+		}
+
 	}
 
 	private void dropKeyspaces() {

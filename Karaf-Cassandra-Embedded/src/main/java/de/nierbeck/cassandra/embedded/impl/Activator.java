@@ -42,7 +42,6 @@ public class Activator implements BundleActivator /*
 						CassandraService.class.getName() },
 				cassandra, props);
 
-		// cassandra.start();
 	}
 
 	@Override
