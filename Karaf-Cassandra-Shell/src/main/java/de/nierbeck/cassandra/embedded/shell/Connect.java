@@ -47,7 +47,7 @@ public class Connect extends CassandraCommandSupport {
 		}
 		Session session = cluster.connect();
 
-		this.session.put(CASSANDRA_CLUSTER, cluster);
-		this.session.put(CASSANDRA_SESSION, session);
+		this.session.put(SessionParameter.CASSANDRA_CLUSTER, cluster);
+		this.session.put(SessionParameter.CASSANDRA_SESSION, session);
 	}
 }
