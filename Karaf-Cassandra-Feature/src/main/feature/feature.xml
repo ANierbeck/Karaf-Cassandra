@@ -10,7 +10,7 @@
 
 	<feature name='Karaf-Cassandra-Embedded' description='${project.name}' version='${project.version}'	>
 		<bundle>mvn:de.nierbeck.cassandra/Karaf-Cassandra-Service/${project.version}</bundle>
-		<bundle>mvn:de.nierbeck.cassandra/Karaf-Cassandra-Embedde/${project.version}</bundle>
+		<bundle>mvn:de.nierbeck.cassandra/Karaf-Cassandra-Embedded/${project.version}</bundle>
 		<bundle>mvn:de.nierbeck.cassandra/Karaf-Cassandra-Admin/${project.version}</bundle>
 	</feature>
 
