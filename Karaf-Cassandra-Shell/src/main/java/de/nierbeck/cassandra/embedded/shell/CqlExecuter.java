@@ -1,5 +1,7 @@
 package de.nierbeck.cassandra.embedded.shell;
 
+import java.awt.List;
+import java.util.Collections;
 import java.util.UUID;
 
 import org.apache.karaf.shell.api.action.Argument;
@@ -12,7 +14,6 @@ import com.datastax.driver.core.ColumnDefinitions.Definition;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
-import com.datastax.driver.core.utils.UUIDs;
 
 @Command(scope = "cassandra", name = "cql", description = "execute cql commands")
 @Service
@@ -28,7 +29,8 @@ public class CqlExecuter extends CassandraCommandSupport {
 				.get(SessionParameter.CASSANDRA_SESSION);
 
 		if (session == null) {
-			System.err.println("No active session found--run the connect command first");
+			System.err
+					.println("No active session found--run the connect command first");
 			return null;
 		}
 
@@ -47,20 +49,22 @@ public class CqlExecuter extends CassandraCommandSupport {
 					table.column(definition.getName());
 				}
 				Class<?> asJavaClass = definition.getType().asJavaClass();
-				if (String.class == asJavaClass)
+
+				if (String.class == asJavaClass) {
 					shellRow.addContent(row.getString(definition.getName()));
-				else if (Integer.class == asJavaClass)
+				} else if (Integer.class == asJavaClass) {
 					shellRow.addContent(row.getInt(definition.getName()));
-
-				else if (Double.class == asJavaClass)
+				} else if (Double.class == asJavaClass) {
 					shellRow.addContent(row.getDouble(definition.getName()));
-
-				else if (UUID.class == asJavaClass)
+				} else if (UUID.class == asJavaClass) {
 					shellRow.addContent(row.getUUID(definition.getName())
 							.toString());
+				} else if (List.class == asJavaClass) {
+					shellRow.addContent("List:" + definition.getType());
 
-				else
+				} else {
 					shellRow.addContent(definition.getType());
+				}
 
 			}
 			isFirst = false;
