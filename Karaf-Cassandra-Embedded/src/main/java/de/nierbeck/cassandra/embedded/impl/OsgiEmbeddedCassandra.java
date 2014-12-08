@@ -76,8 +76,6 @@ public class OsgiEmbeddedCassandra implements Server, CassandraService,
 	@Override
 	public void stop() {
 		logger.info("Stopping cassandra deamon");
-		// logger.info("dropping keyspace");
-		// dropKeyspaces();
 		logger.info("cleaning up the Schema keys");
 		Schema.instance.clear();
 		logger.info("stopping cassandra");
@@ -97,6 +95,13 @@ public class OsgiEmbeddedCassandra implements Server, CassandraService,
 			logger.warn("Couldn't remove MBean");
 		}
 
+	}
+
+	@Override
+	public void cleanUp() {
+		if (isRunning()) {
+			dropKeyspaces();
+		}
 	}
 
 	private void dropKeyspaces() {
