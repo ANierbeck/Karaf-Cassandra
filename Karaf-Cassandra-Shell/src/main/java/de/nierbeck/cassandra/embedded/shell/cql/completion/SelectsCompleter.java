@@ -17,69 +17,84 @@ import de.nierbeck.cassandra.embedded.shell.SessionParameter;
 @Service
 public class SelectsCompleter implements Completer {
 
+	StringsCompleter delegate = new StringsCompleter();
+
 	public int complete(Session session, CommandLine commandLine,
 			List<String> candidates) {
-		StringsCompleter delegate = new StringsCompleter();
+		if (session != null) {
 
-		com.datastax.driver.core.Session cassandraSession = (com.datastax.driver.core.Session) session
-				.get(SessionParameter.CASSANDRA_SESSION);
+			com.datastax.driver.core.Session cassandraSession = (com.datastax.driver.core.Session) session
+					.get(SessionParameter.CASSANDRA_SESSION);
 
-		if (cassandraSession == null) {
-			System.err
-					.println("No active session found--run the connect command first");
-			return 0;
-		}
-
-		boolean foundStar = false;
-		boolean foundFrom = false;
-		String foundDot = null;
-
-		List<String> commandLineArgs = Arrays
-				.asList(commandLine.getArguments());
-
-		delegate.getStrings().add("*");
-		delegate.getStrings().add("FROM");
-
-		if (!commandLineArgs.isEmpty()) {
-			foundStar = commandLineArgs.contains("*");
-			foundFrom = commandLineArgs.contains("FROM")
-					|| commandLineArgs.contains("from");
-			for (String string : commandLineArgs) {
-				if (string.contains("."))
-					foundDot = string;
+			if (cassandraSession == null) {
+				System.err
+						.println("No active session found--run the connect command first");
+				return 0;
 			}
-		}
 
-		String loggedKeyspace = cassandraSession.getLoggedKeyspace();
-		if (loggedKeyspace == null && foundStar && foundFrom) {
-			CompleterCommons.completeKeySpace(delegate, cassandraSession);
-		}
+			boolean foundStar = false;
+			boolean foundFrom = false;
+			String foundDot = null;
 
-		if ((loggedKeyspace != null || foundDot != null) && foundStar && foundFrom) {
-			delegate.getStrings().remove("*");
-			delegate.getStrings().remove("FROM");
+			boolean addedKeyspaces = false;
+			boolean addedTables = false;
 
-			String keyspace = loggedKeyspace;
-			if (foundDot != null) {
-				keyspace = foundDot;
-				keyspace = keyspace.substring(0, keyspace.indexOf("."));
+			List<String> commandLineArgs = Arrays.asList(commandLine
+					.getArguments());
+
+			delegate.getStrings().add("*");
+			delegate.getStrings().add("FROM");
+			// delegate.getStrings().add("WHERE");
+
+			if (!commandLineArgs.isEmpty()) {
+				foundStar = commandLineArgs.contains("*");
+				foundFrom = commandLineArgs.contains("FROM")
+						|| commandLineArgs.contains("from");
+				for (String string : commandLineArgs) {
+					if (string.contains("."))
+						foundDot = string;
+				}
 			}
-			ResultSet execute = cassandraSession
-					.execute(String
-							.format("select columnfamily_name from system.schema_columnfamilies where keyspace_name = '%s';",
-									keyspace));
-			if (foundDot != null)
-				delegate.getStrings().remove(foundDot);
-			for (Row row : execute) {
-				String table = row.getString("columnfamily_name");
+
+			String loggedKeyspace = cassandraSession.getLoggedKeyspace();
+			if (loggedKeyspace == null && foundFrom) {
+				delegate.getStrings().remove("*");
+				CompleterCommons.completeKeySpace(delegate, cassandraSession);
+				addedKeyspaces = true;
+			}
+
+			if ((loggedKeyspace != null || foundDot != null) && foundFrom) {
+				delegate.getStrings().remove("*");
+				delegate.getStrings().remove("FROM");
+
+				String keyspace = loggedKeyspace;
+				if (foundDot != null) {
+					keyspace = foundDot;
+					keyspace = keyspace.substring(0, keyspace.indexOf("."));
+				}
+				ResultSet execute = cassandraSession
+						.execute(String
+								.format("select columnfamily_name from system.schema_columnfamilies where keyspace_name = '%s';",
+										keyspace));
 				if (foundDot != null)
-					delegate.getStrings().add(keyspace + "." + table);
-				else
-					delegate.getStrings().add(table);
+					delegate.getStrings().remove(foundDot);
+				for (Row row : execute) {
+					String table = row.getString("columnfamily_name");
+					if (foundDot != null)
+						delegate.getStrings().add(keyspace + "." + table);
+					else
+						delegate.getStrings().add(table);
+				}
+				addedTables = true;
+			}
+			if ((!foundStar && !commandLineArgs.isEmpty()) && !addedTables
+					&& !addedKeyspaces) {
+				if (!commandLineArgs.get(0).equalsIgnoreCase("SELECT")) {
+					delegate.getStrings().add(commandLineArgs.get(0));
+					delegate.getStrings().remove("*");
+				}
 			}
 		}
-
-
 		return delegate.complete(session, commandLine, candidates);
 
 	}
