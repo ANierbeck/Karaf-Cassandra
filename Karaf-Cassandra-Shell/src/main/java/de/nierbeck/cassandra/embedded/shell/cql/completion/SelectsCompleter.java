@@ -17,7 +17,7 @@ import de.nierbeck.cassandra.embedded.shell.SessionParameter;
 @Service
 public class SelectsCompleter implements Completer {
 
-	StringsCompleter delegate = new StringsCompleter();
+	StringsCompleter delegate = new StringsCompleter(false);
 
 	public int complete(Session session, CommandLine commandLine,
 			List<String> candidates) {

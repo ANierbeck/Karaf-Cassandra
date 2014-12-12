@@ -1,5 +1,7 @@
 package de.nierbeck.cassandra.embedded.shell.cql;
 
+import java.util.List;
+
 import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
@@ -9,23 +11,26 @@ import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.apache.karaf.shell.support.completers.StringsCompleter;
 import org.apache.karaf.shell.support.table.ShellTable;
 
+import com.datastax.driver.core.ExecutionInfo;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Session;
 
 import de.nierbeck.cassandra.embedded.shell.CqlExecuter;
 import de.nierbeck.cassandra.embedded.shell.SessionParameter;
+import de.nierbeck.cassandra.embedded.shell.cql.completion.CreateCompleter;
+import de.nierbeck.cassandra.embedded.shell.cql.completion.KeySpaceCompleter;
 
-@Command(scope = "cassandra:cqlsh", name = "DESCRIBE", description = "execute USE cql commands")
+@Command(scope = "cassandra:cqlsh", name = "CREATE", description = "execute USE cql commands")
 @Service
-public class DescribeCommand implements Action {
+public class CreateCommand implements Action {
 
 
 	@Reference
 	protected org.apache.karaf.shell.api.console.Session session;
 
-	@Argument(name = "value", description = "DESCRIBE ?", required = true, multiValued = false)
-	@Completion(caseSensitive = false, values = { "keyspaces", "TABLES" }, value = StringsCompleter.class)
-	private String value;
+	@Argument(name = "create", description = "CREATE table or keyspaces", required = true, multiValued = true)
+	@Completion(CreateCompleter.class)
+	private List<String> create;
 
 	public Object execute() throws Exception {
 		Session session = (Session) this.session
@@ -37,31 +42,21 @@ public class DescribeCommand implements Action {
 			return null;
 		}
 
-		ShellTable table = new ShellTable();
-
-		ResultSet execute = null;
-
-		switch (value) {
-		case "TABLES":
-		case "tables":
-		case "table":
-		case "TABLE":
-			execute = session
-					.execute("select columnfamily_name from system.schema_columnfamilies where keyspace_name = '"
-							+ session.getLoggedKeyspace() + "';");
-			// .execute("select keyspace_name, columnfamily_name, key_validator from schema_columnfamilies;");
-			break;
-		case "keyspaces":
-		default:
-			execute = session.execute("select * from  system.schema_keyspaces;");
-			break;
+		StringBuffer buff = new StringBuffer("CREATE ");
+		for (String createString : create) {
+			buff.append(createString);
+			buff.append(" ");
 		}
+		buff.append(";");
 
-		if (execute != null) {
-			CqlExecuter.cassandraRowFormater(table, execute);
-			table.print(System.out);
-		}
+		ResultSet execute = session.execute(buff.toString());
 
+		List<ExecutionInfo> allExecutionInfo = execute.getAllExecutionInfo();
+
+		if (execute.wasApplied())
+			System.out.println("created");
+		else
+			System.out.println("not-created");
 		return null;
 	}
 
