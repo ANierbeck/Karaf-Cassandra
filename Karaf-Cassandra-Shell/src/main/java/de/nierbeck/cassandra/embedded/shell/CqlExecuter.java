@@ -38,16 +38,23 @@ public class CqlExecuter extends CassandraCommandSupport {
 
 		ResultSet execute = session.execute(cql);
 
-		boolean isFirst = true;
-		for (Row row : execute) {
-			ColumnDefinitions columnDefinitions = row.getColumnDefinitions();
+		cassandraRowFormater(table, execute);
 
+		table.print(System.out);
+		return null;
+	}
+
+	public static void cassandraRowFormater(ShellTable table, ResultSet execute) {
+
+		ColumnDefinitions columnDefinitions = execute.getColumnDefinitions();
+		for (Definition definition : columnDefinitions) {
+			table.column(definition.getName());
+		}
+
+		for (Row row : execute) {
 			org.apache.karaf.shell.support.table.Row shellRow = table.addRow();
 
 			for (Definition definition : columnDefinitions) {
-				if (isFirst) {
-					table.column(definition.getName());
-				}
 				Class<?> asJavaClass = definition.getType().asJavaClass();
 
 				if (String.class == asJavaClass) {
@@ -67,11 +74,7 @@ public class CqlExecuter extends CassandraCommandSupport {
 				}
 
 			}
-			isFirst = false;
 		}
-
-		table.print(System.out);
-		return null;
 	}
 
 }
