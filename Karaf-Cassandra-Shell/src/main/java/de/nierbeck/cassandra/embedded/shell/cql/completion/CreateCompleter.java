@@ -30,56 +30,70 @@ public class CreateCompleter implements Completer {
 				return 0;
 			}
 
-			List<String> arguments = Arrays.asList(commandLine.getArguments());
+			if (commandLine instanceof ArgumentCommandLine) {
+				delegate.getStrings().add(commandLine.getCursorArgument());
 
-			int argPos = 0;
-			if (commandLine.getArguments()[0].equalsIgnoreCase("CREATE"))
-				argPos++;
+			} else {
 
-			if (commandLine.getArgumentPosition() <= argPos) {
-				delegate.getStrings().add("KEYSPACE");
-				delegate.getStrings().add("TABLE");
-			}
+				/*
+				 * CREATE ( KEYSPACE | SCHEMA ) IF NOT EXISTS keyspace_name WITH
+				 * REPLICATION = map AND DURABLE_WRITES = ( true | false )
+				 */
 
-			if (commandLine.getArgumentPosition() >= argPos + 1) {
+				/*
+				 * CREATE TABLE IF NOT EXISTS keyspace_name.table_name
+				 * (column_definition, column_definition, ...) WITH property AND
+				 * property ...
+				 */
 
-				String prevArg = commandLine.getArguments()[argPos];
-				switch (prevArg) {
-				case "TABLE":
-					int index = arguments.indexOf("TABLE");
-					if (arguments.contains("TABLE")
-							&& arguments.size() > index + 1) {
-						delegate.getStrings().add(arguments.get(index + 1));
-					}
-					delegate.getStrings().add("TABLE");
-					delegate.getStrings().remove("KEYSPACE");
-					delegate.getStrings().add("(");
-					delegate.getStrings().add(")");
-					delegate.getStrings().add("PRIMARY KEY");
-					break;
-				case "KEYSPACE":
-				default:
-					index = arguments.indexOf("KEYSPACE");
-					if (arguments.contains("KEYSPACE")
-							&& arguments.size() > index + 1) {
-						delegate.getStrings().add(arguments.get(index + 1));
-					}
+				List<String> arguments = Arrays.asList(commandLine
+						.getArguments());
+				int cursorArgumentIndex = commandLine.getCursorArgumentIndex();
+
+				if (cursorArgumentIndex <= 1) {
 					delegate.getStrings().add("KEYSPACE");
-					delegate.getStrings().remove("TABLE");
-					delegate.getStrings().add("WITH REPLICATION = {");
-					delegate.getStrings().add("'class' :");
-					delegate.getStrings().add("'SimpleStrategy'");
-					delegate.getStrings().add(",");
-					delegate.getStrings().add("'replication_factor' :");
-					delegate.getStrings().add("}");
-					break;
+					delegate.getStrings().add("TABLE");
 				}
 
-			}
-			if (commandLine instanceof ArgumentCommandLine) {
-				// sometimes it completes on single arguments, those should be
-				// added cause otherwise the completion doesn't work at all.
-				delegate.getStrings().add(commandLine.getCursorArgument());
+				if (cursorArgumentIndex >= 2) {
+
+					String prevArg = commandLine.getArguments()[1];
+					switch (prevArg) {
+					case "TABLE":
+						int index = arguments.indexOf("TABLE");
+						if (arguments.contains("TABLE")
+								&& arguments.size() > index + 1) {
+							delegate.getStrings().add(arguments.get(index + 1));
+						}
+						delegate.getStrings().add("TABLE");
+						delegate.getStrings().remove("KEYSPACE");
+						delegate.getStrings().add("(");
+						delegate.getStrings().add(")");
+						delegate.getStrings().add("PRIMARY KEY");
+						break;
+					case "KEYSPACE":
+					default:
+						if (cursorArgumentIndex == 2) {
+							delegate.getStrings().clear();
+							delegate.getStrings().add("IF NOT EXISTS");
+						} else if (cursorArgumentIndex > 2) {
+							delegate.getStrings().clear();
+							index = arguments.indexOf("KEYSPACE");
+							if (arguments.contains("KEYSPACE")
+									&& arguments.size() > index + 1) {
+								delegate.getStrings().add(
+										arguments.get(index + 1));
+							}
+							delegate.getStrings().add("WITH REPLICATION = \\{");
+							delegate.getStrings().add("'class' :");
+							delegate.getStrings().add("'SimpleStrategy'");
+							delegate.getStrings().add(",");
+							delegate.getStrings().add("'replication_factor' :");
+							delegate.getStrings().add("\\}");
+						}
+						break;
+					}
+				}
 			}
 		}
 		return delegate.complete(session, commandLine, candidates);
