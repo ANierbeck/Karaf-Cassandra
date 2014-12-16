@@ -18,6 +18,22 @@ import org.ops4j.pax.exam.spi.reactors.PerClass;
 public class CassandraClientTest extends TestBase{
 	
 
+	
+	@Test
+	public void shouldHaveBundleContext() {
+		assertThat(bc, is(notNullValue()));
+	}
+
+	@Test
+	public void featuresShouldBeInstalled() throws Exception {
+		assertThat(featuresService.isInstalled(featuresService
+				.getFeature("Karaf-Cassandra-Embedded")), is(true));
+		assertThat(featuresService.isInstalled(featuresService
+				.getFeature("Karaf-Cassandra-Client")), is(true));
+		assertThat(featuresService.isInstalled(featuresService
+				.getFeature("Karaf-Cassandra-Shell")), is(true));
+	}
+	
 	@Test
 	public void cassandraConnect() throws Exception {
 

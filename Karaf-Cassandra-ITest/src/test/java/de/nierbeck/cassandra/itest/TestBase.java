@@ -156,20 +156,4 @@ public class TestBase {
 		return response;
 	}
 	
-	
-	
-	@Test
-	public void shouldHaveBundleContext() {
-		assertThat(bc, is(notNullValue()));
-	}
-
-	@Test
-	public void featuresShouldBeInstalled() throws Exception {
-		assertThat(featuresService.isInstalled(featuresService
-				.getFeature("Karaf-Cassandra-Embedded")), is(true));
-		assertThat(featuresService.isInstalled(featuresService
-				.getFeature("Karaf-Cassandra-Client")), is(true));
-		assertThat(featuresService.isInstalled(featuresService
-				.getFeature("Karaf-Cassandra-Shell")), is(true));
-	}
 }
