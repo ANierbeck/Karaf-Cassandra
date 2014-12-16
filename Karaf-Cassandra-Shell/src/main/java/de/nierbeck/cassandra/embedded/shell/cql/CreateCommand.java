@@ -8,17 +8,13 @@ import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.Completion;
 import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
-import org.apache.karaf.shell.support.completers.StringsCompleter;
-import org.apache.karaf.shell.support.table.ShellTable;
 
 import com.datastax.driver.core.ExecutionInfo;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Session;
 
-import de.nierbeck.cassandra.embedded.shell.CqlExecuter;
 import de.nierbeck.cassandra.embedded.shell.SessionParameter;
 import de.nierbeck.cassandra.embedded.shell.cql.completion.CreateCompleter;
-import de.nierbeck.cassandra.embedded.shell.cql.completion.KeySpaceCompleter;
 
 @Command(scope = "cassandra:cqlsh", name = "CREATE", description = "execute USE cql commands")
 @Service
@@ -50,8 +46,6 @@ public class CreateCommand implements Action {
 		buff.append(";");
 
 		ResultSet execute = session.execute(buff.toString());
-
-		List<ExecutionInfo> allExecutionInfo = execute.getAllExecutionInfo();
 
 		if (execute.wasApplied())
 			System.out.println("created");

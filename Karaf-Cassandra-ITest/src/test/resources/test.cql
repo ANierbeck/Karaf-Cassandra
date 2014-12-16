@@ -1,0 +1,1 @@
+SELECT keyspace_name FROM system.schema_keyspaces;

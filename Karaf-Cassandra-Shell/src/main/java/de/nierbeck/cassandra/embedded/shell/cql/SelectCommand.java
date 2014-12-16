@@ -39,8 +39,6 @@ public class SelectCommand implements Action {
 			return null;
 		}
 
-		ShellTable table = new ShellTable();
-
 		StringBuffer buff = new StringBuffer("SELECT ");
 		for (String selectString : select) {
 			buff.append(selectString);

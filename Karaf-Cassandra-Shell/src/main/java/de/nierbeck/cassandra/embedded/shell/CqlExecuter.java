@@ -1,11 +1,16 @@
 package de.nierbeck.cassandra.embedded.shell;
 
 import java.awt.List;
-import java.util.Collections;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.UUID;
 
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Option;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.apache.karaf.shell.support.table.ShellTable;
 
@@ -19,8 +24,11 @@ import com.datastax.driver.core.Session;
 @Service
 public class CqlExecuter extends CassandraCommandSupport {
 
-	@Argument(name = "cql", description = "CQL to execute", required = true, multiValued = false)
+	@Argument(name = "cql", description = "CQL to execute", required = false, multiValued = false)
 	private String cql;
+
+	@Option(name = "-f", aliases = {"--file"}, description = "A URI pointing to a CQL file to be executed by the command, must start with a URI schema like file:", required = false, multiValued = false)
+	private URI fileLocation;
 
 	@Override
 	public Object doExecute() throws Exception {
@@ -32,6 +40,32 @@ public class CqlExecuter extends CassandraCommandSupport {
 			System.err
 					.println("No active session found--run the connect command first");
 			return null;
+		}
+
+		if (cql == null && fileLocation == null) {
+			System.err
+					.println("Either cql skript or a filename must be given.");
+			return null;
+		}
+
+		if (cql == null && fileLocation != null) {
+			byte[] encoded;
+			InputStream is = fileLocation.toURL().openStream ();
+			try (ByteArrayOutputStream os = new ByteArrayOutputStream();) {
+		        byte[] buffer = new byte[0xFFFF];
+
+		        for (int len; (len = is.read(buffer)) != -1;)
+		            os.write(buffer, 0, len);
+
+		        os.flush();
+
+		        encoded = os.toByteArray();
+		    } catch (IOException e) {
+		    	System.err.println("Can't read fileinput");
+		        return null;
+		    }
+
+			cql = new String(encoded, Charset.defaultCharset());
 		}
 
 		ShellTable table = new ShellTable();

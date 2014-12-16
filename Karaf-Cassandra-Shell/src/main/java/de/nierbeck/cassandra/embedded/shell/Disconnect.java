@@ -25,6 +25,8 @@ public class Disconnect extends CassandraCommandSupport {
 		Session session = (Session) this.session
 				.get(SessionParameter.CASSANDRA_SESSION);
 
+		String clusterName = "not available anymore";
+		
 		if (session == null) {
 			System.err.println("No active session found!");
 		} else {
@@ -35,9 +37,11 @@ public class Disconnect extends CassandraCommandSupport {
 		if (cluster == null) {
 			System.err.println("No active cluster connection found!");
 		} else {
+			clusterName = cluster.getMetadata().getClusterName();
 			cluster.close();
 			this.session.put(SessionParameter.CASSANDRA_CLUSTER, null);
 		}
 
+		System.out.println("disconnected from '"+clusterName+ "'");
 	}
 }

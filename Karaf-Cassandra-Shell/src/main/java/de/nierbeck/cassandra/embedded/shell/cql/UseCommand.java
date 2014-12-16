@@ -36,9 +36,12 @@ public class UseCommand implements Action {
 			return null;
 		}
 
-		ShellTable table = new ShellTable();
+
 		ResultSet execute = session.execute("USE " + keyspace);
-		System.out.printf("now using keyspace: %s \n", keyspace);
+		if (execute.wasApplied())
+			System.out.printf("now using keyspace: %s \n", keyspace);
+		else
+			System.err.println("can't use keyspace");
 
 		return null;
 	}
