@@ -5,8 +5,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
-import java.io.File;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,8 +49,12 @@ public class CassandraCqlshTest extends TestBase{
 	@Test
 	public void cassandraCqlshUse() throws Exception {
 
-		assertThat(executeCommand("cassandra:cqlsh:USE system;"), containsString("using system"));
+		assertThat(executeCommand("cassandra:cqlsh:USE system;"), containsString("now using keyspace: system"));
 		
 	}
 	
+	@Test
+	public void cassandraCqlSelect() throws Exception {
+		assertThat(executeCommand("SELECT * from system.schema_keyspaces;"), containsString("keyspace"));
+	}
 }
