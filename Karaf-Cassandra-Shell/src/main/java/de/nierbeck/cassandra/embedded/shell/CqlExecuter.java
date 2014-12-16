@@ -36,8 +36,6 @@ public class CqlExecuter extends CassandraCommandSupport {
 
 		Session session = (Session) this.session
 				.get(SessionParameter.CASSANDRA_SESSION);
-		Boolean oldExpansion = (Boolean) this.session.get("org.apache.felix.gogo.expansion");
-		this.session.put("org.apache.felix.gogo.expansion", false);
 
 		if (session == null) {
 			System.err
@@ -69,6 +67,17 @@ public class CqlExecuter extends CassandraCommandSupport {
 		    }
 
 			cql = new String(encoded, Charset.defaultCharset());
+		} else {
+			int start = 0;
+			int end = 0;
+			if (cql.startsWith("\"")) {
+				//need to remove quotes first
+				start = 1;
+				if (cql.endsWith("\"")) {
+					end = cql.lastIndexOf("\"");
+				}
+				cql = cql.substring(start, end);
+			}
 		}
 
 		ShellTable table = new ShellTable();
@@ -78,8 +87,6 @@ public class CqlExecuter extends CassandraCommandSupport {
 		cassandraRowFormater(table, execute);
 
 		table.print(System.out);
-		
-		this.session.put("org.apache.felix.gogo.expansion", oldExpansion);
 		
 		return null;
 	}
