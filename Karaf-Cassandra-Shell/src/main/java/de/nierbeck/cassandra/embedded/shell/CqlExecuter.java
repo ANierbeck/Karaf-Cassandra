@@ -36,6 +36,8 @@ public class CqlExecuter extends CassandraCommandSupport {
 
 		Session session = (Session) this.session
 				.get(SessionParameter.CASSANDRA_SESSION);
+		Boolean oldExpansion = (Boolean) this.session.get("org.apache.felix.gogo.expansion");
+		this.session.put("org.apache.felix.gogo.expansion", false);
 
 		if (session == null) {
 			System.err
@@ -76,6 +78,9 @@ public class CqlExecuter extends CassandraCommandSupport {
 		cassandraRowFormater(table, execute);
 
 		table.print(System.out);
+		
+		this.session.put("org.apache.felix.gogo.expansion", oldExpansion);
+		
 		return null;
 	}
 

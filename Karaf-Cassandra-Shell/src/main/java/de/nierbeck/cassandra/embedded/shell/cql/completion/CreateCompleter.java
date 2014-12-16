@@ -84,12 +84,12 @@ public class CreateCompleter implements Completer {
 								delegate.getStrings().add(
 										arguments.get(index + 1));
 							}
-							delegate.getStrings().add("WITH REPLICATION = \\{");
+							delegate.getStrings().add("WITH REPLICATION = {");
 							delegate.getStrings().add("'class' :");
 							delegate.getStrings().add("'SimpleStrategy'");
 							delegate.getStrings().add(",");
 							delegate.getStrings().add("'replication_factor' :");
-							delegate.getStrings().add("\\}");
+							delegate.getStrings().add("}");
 						}
 						break;
 					}
