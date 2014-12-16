@@ -4,6 +4,7 @@ import java.awt.List;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.UUID;
@@ -102,7 +103,10 @@ public class CqlExecuter extends CassandraCommandSupport {
 							.toString());
 				} else if (List.class == asJavaClass) {
 					shellRow.addContent("List:" + definition.getType());
-
+				} else if (BigInteger.class == asJavaClass) {
+					shellRow.addContent(row.getLong(definition.getName()));
+				} else if (Long.class == asJavaClass) {
+					shellRow.addContent(row.getLong(definition.getName()));
 				} else {
 					shellRow.addContent(definition.getType());
 				}

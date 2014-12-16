@@ -17,7 +17,7 @@ import de.nierbeck.cassandra.embedded.shell.CqlExecuter;
 import de.nierbeck.cassandra.embedded.shell.SessionParameter;
 import de.nierbeck.cassandra.embedded.shell.cql.completion.SelectsCompleter;
 
-@Command(scope = "cassandra:cqlsh", name = "SELECT", description = "execute SELECT cql commands")
+@Command(scope = "cassandra:cqlsh", name = "SELECT", description = "execute SELECT cql commands, completion helps with simple commands, though all SELECTS can be issued")
 @Service
 public class SelectCommand implements Action {
 
@@ -30,6 +30,7 @@ public class SelectCommand implements Action {
 	private List<String> select;
 
 	public Object execute() throws Exception {
+		this.session.put("org.apache.felix.gogo.expansion", false);
 		Session session = (Session) this.session
 				.get(SessionParameter.CASSANDRA_SESSION);
 
