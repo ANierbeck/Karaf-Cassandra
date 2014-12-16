@@ -30,7 +30,6 @@ public class SelectCommand implements Action {
 	private List<String> select;
 
 	public Object execute() throws Exception {
-		this.session.put("org.apache.felix.gogo.expansion", false);
 		Session session = (Session) this.session
 				.get(SessionParameter.CASSANDRA_SESSION);
 

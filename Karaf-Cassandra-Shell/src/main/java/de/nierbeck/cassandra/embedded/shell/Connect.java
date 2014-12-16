@@ -33,6 +33,7 @@ public class Connect extends CassandraCommandSupport {
 	}
 
 	public void connect(String node, Integer port) {
+		this.session.put("org.apache.felix.gogo.expansion", false);
 		Builder clusterBuilder = Cluster.builder().addContactPoint(node);
 		if (port != null) {
 			clusterBuilder.withPort(port);

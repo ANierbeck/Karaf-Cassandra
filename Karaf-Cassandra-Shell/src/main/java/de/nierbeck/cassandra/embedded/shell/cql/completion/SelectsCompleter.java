@@ -83,10 +83,10 @@ public class SelectsCompleter implements Completer {
 					delegate.getStrings().clear();
 					if ("COUNT".equalsIgnoreCase(validArgument)) {
 						//count completion needed
-						delegate.getStrings().add("'('");
+						delegate.getStrings().add("(");
 						delegate.getStrings().add("*");
 						delegate.getStrings().add("1");
-						delegate.getStrings().add("')'");
+						delegate.getStrings().add(")");
 						session.put("isCount", true);
 					} else if("*".equalsIgnoreCase(validArgument)) {
 						delegate.getStrings().add("FROM");
@@ -106,11 +106,11 @@ public class SelectsCompleter implements Completer {
 						case "'('":
 							delegate.getStrings().add("*");
 							delegate.getStrings().add("1");
-							delegate.getStrings().add("')'");
+							delegate.getStrings().add(")");
 							break;
 						case "*":
 						case "1":
-							delegate.getStrings().add("')'");
+							delegate.getStrings().add(")");
 							break;
 						case "')'":
 						default:

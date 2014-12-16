@@ -19,7 +19,7 @@ public class Disconnect extends CassandraCommandSupport {
 	}
 
 	public void disconnect() {
-
+		this.session.put("org.apache.felix.gogo.expansion", true);
 		Cluster cluster = (Cluster) this.session
 				.get(SessionParameter.CASSANDRA_CLUSTER);
 		Session session = (Session) this.session
