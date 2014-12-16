@@ -1,5 +1,6 @@
 package de.nierbeck.cassandra.embedded.shell.cql.completion;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.karaf.shell.api.action.lifecycle.Service;
@@ -44,24 +45,28 @@ public class DropCompleter implements Completer {
 				 * DROP TABLE IF EXISTS keyspace_name.table_name
 				 */
 
-				String[] arguments = commandLine.getArguments();
+				List<String> arguments = Arrays.asList(commandLine
+						.getArguments());
 				int cursorArgumentIndex = commandLine.getCursorArgumentIndex();
-
+				String validArgument; 
+				if (cursorArgumentIndex > 1)
+					validArgument = arguments.get(cursorArgumentIndex -1);
+				else
+					validArgument = arguments.get(0);
+				
 				if (cursorArgumentIndex <= 1) {
 					delegate.getStrings().add("KEYSPACE");
 					delegate.getStrings().add("SCHEMA");
-
 					// alternative drop a table
 					delegate.getStrings().add("TABLE");
-				} else if (cursorArgumentIndex == 2) {
+				} else if (cursorArgumentIndex >= 2) {
 					delegate.getStrings().clear();
-					delegate.getStrings().add("IF EXISTS");
-					// TODO: special handling to differ between keyspaces and
+					if (cursorArgumentIndex == 2)
+						delegate.getStrings().add("IF EXISTS");
+
 					// tables are needed.
-					if (arguments[cursorArgumentIndex - 1]
-							.equalsIgnoreCase("KEYSPACE")
-							|| arguments[cursorArgumentIndex - 1]
-									.equalsIgnoreCase("SCHEMA")
+					if (validArgument.equalsIgnoreCase("KEYSPACE")
+							|| validArgument.equalsIgnoreCase("SCHEMA")
 							|| cassandraSession.getLoggedKeyspace() == null) {
 						CompleterCommons.completeKeySpace(delegate,
 								cassandraSession);
@@ -73,35 +78,10 @@ public class DropCompleter implements Completer {
 												keyspace));
 						for (Row row : execute) {
 							String table = row.getString("columnfamily_name");
-//							if (foundDot != null)
-//								delegate.getStrings().add(keyspace + "." + table);
-//							else
-								delegate.getStrings().add(table);
+							delegate.getStrings().add(table);
 						}
 					}
-				} else if (cursorArgumentIndex > 2) {
-					delegate.getStrings().clear();
-					if (arguments[cursorArgumentIndex - 1]
-							.equalsIgnoreCase("KEYSPACE")
-							|| arguments[cursorArgumentIndex - 1]
-									.equalsIgnoreCase("SCHEMA")) {
-						CompleterCommons.completeKeySpace(delegate,
-								cassandraSession);
-					} else {
-						String keyspace = cassandraSession.getLoggedKeyspace();
-						ResultSet execute = cassandraSession
-								.execute(String
-										.format("select columnfamily_name from system.schema_columnfamilies where keyspace_name = '%s';",
-												keyspace));
-						for (Row row : execute) {
-							String table = row.getString("columnfamily_name");
-//							if (foundDot != null)
-//								delegate.getStrings().add(keyspace + "." + table);
-//							else
-								delegate.getStrings().add(table);
-						}
-					}
-				}
+				} 
 			}
 		}
 		return delegate.complete(session, commandLine, candidates);
