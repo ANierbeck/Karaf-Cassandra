@@ -7,7 +7,7 @@ Besides that there is also a Client Shell addition to Karaf contained in the Fea
 
 !ATTENTION! If you want to run this showcase you'll need the enhanced Apache Karaf 4.0.0-SNAPSHOT version which is found at my [ANierbeck/CustomKaraf](https://github.com/ANierbeck/CustomKaraf) github project. It contains some enhancements I needed to do to the underlying shell to skip \(, \), \" \' and more to be interpreted by the shell as those are needed for the CQLSH like commands.
 
-More details about this project can be found at [blog.codecentric.de](https://blog.codecentric.de) and [notizblog.nierbeck.de](http://notizblog.nierbeck.de/).  
+More details about this project can be found at [blog.codecentric.de](https://blog.codecentric.de/?p=25821) and [notizblog.nierbeck.de](http://notizblog.nierbeck.de/2014/12/embedding-apache-cassandra/).  
 
 To run this showcase:   
 `git pull https://github.com/ANierbeck/CustomKaraf
