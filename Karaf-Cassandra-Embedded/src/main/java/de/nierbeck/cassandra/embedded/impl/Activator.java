@@ -12,10 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import de.nierbeck.cassandra.embedded.CassandraService;
 
-public class Activator implements BundleActivator /*
-												 * extends
-												 * DependencyActivatorBase
-												 */{
+public class Activator implements BundleActivator{
 
 	static Logger log = LoggerFactory.getLogger(Activator.class);
 
@@ -23,18 +20,12 @@ public class Activator implements BundleActivator /*
 
 	private ServiceRegistration<?> cassandraService;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void start(BundleContext context) throws Exception {
-		// public void init(BundleContext context, DependencyManager manager) {
 		cassandra = new OsgiEmbeddedCassandra();
 
-		// manager.add(createComponent()
-		// .setInterface(CassandraService.class.getName(), null)
-		// .setImplementation(OsgiEmbeddedCassandra.class)
-		// .add(createConfigurationDependency().setPid(
-		// "de.nierbeck.cassandra.embedded.pid"))
-		// .setCallbacks(null, "start", "stop", null));
-
+		@SuppressWarnings("rawtypes")
 		Dictionary props = new Hashtable();
 		props.put("service.pid", "de.nierbeck.cassandra,embedded");
 		cassandraService = context.registerService(new String[] {
@@ -46,15 +37,11 @@ public class Activator implements BundleActivator /*
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		// public void destroy(BundleContext context, DependencyManager manager)
-		// {
 		if (cassandraService != null) {
 			cassandraService.unregister();
 			cassandraService = null;
 			if (cassandra.isRunning())
 				cassandra.stop();
 		}
-
 	}
-
 }

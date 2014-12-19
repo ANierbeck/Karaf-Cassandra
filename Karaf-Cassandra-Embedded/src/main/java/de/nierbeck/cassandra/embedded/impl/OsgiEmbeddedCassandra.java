@@ -39,6 +39,17 @@ public class OsgiEmbeddedCassandra implements Server, CassandraService,
 	private CassandraDaemon cassandraDaemon;
 
 	private String cassandraConfig;
+	
+	@Override
+	public void updated(Dictionary<String, ?> properties)
+			throws ConfigurationException {
+		if (isRunning())
+			stop();
+		if (properties != null) {
+			cassandraConfig = (String) properties.get("cassandra.yaml");
+		}
+		start();
+	}
 
 	@Override
 	public boolean isRunning() {
@@ -80,9 +91,9 @@ public class OsgiEmbeddedCassandra implements Server, CassandraService,
 		Schema.instance.clear();
 		logger.info("stopping cassandra");
 		cassandraDaemon.stop();
-		logger.info("destroying the cassnadra deamon");
+		logger.info("destroying the cassandra deamon");
 		cassandraDaemon.destroy();
-		logger.info("cassndra is removed");
+		logger.info("cassandra is removed");
 		cassandraDaemon = null;
 
 		logger.info("removing MBean");
@@ -123,17 +134,6 @@ public class OsgiEmbeddedCassandra implements Server, CassandraService,
 				cluster.dropKeyspace(keyspaceName);
 			}
 		}
-	}
-
-	@Override
-	public void updated(Dictionary<String, ?> properties)
-			throws ConfigurationException {
-		if (isRunning())
-			stop();
-		if (properties != null) {
-			cassandraConfig = (String) properties.get("cassandra.yaml");
-		}
-		start();
 	}
 
 }
