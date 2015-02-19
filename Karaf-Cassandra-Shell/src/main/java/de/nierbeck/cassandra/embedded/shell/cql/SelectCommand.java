@@ -6,6 +6,7 @@ import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.Completion;
+import org.apache.karaf.shell.api.action.Parsing;
 import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.apache.karaf.shell.support.table.ShellTable;
@@ -18,6 +19,7 @@ import de.nierbeck.cassandra.embedded.shell.SessionParameter;
 import de.nierbeck.cassandra.embedded.shell.cql.completion.SelectsCompleter;
 
 @Command(scope = "cassandra:cqlsh", name = "SELECT", description = "execute SELECT cql commands, completion helps with simple commands, though all SELECTS can be issued")
+@Parsing(CqlParser.class)
 @Service
 public class SelectCommand implements Action {
 

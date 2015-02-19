@@ -4,6 +4,7 @@ import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.Completion;
+import org.apache.karaf.shell.api.action.Parsing;
 import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 
@@ -14,6 +15,7 @@ import de.nierbeck.cassandra.embedded.shell.SessionParameter;
 import de.nierbeck.cassandra.embedded.shell.cql.completion.KeySpaceCompleter;
 
 @Command(scope = "cassandra:cqlsh", name = "USE", description = "execute USE cql commands")
+@Parsing(CqlParser.class)
 @Service
 public class UseCommand implements Action {
 
