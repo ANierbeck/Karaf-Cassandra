@@ -33,7 +33,7 @@
     <description>Provides the OSGi cql commands</description>
     
     <properties>
-    	<karaf.version>4.0.0.M2</karaf.version>
+    	<karaf.version>4.0.0-SNAPSHOT</karaf.version>
     </properties>
 
     <dependencies>
