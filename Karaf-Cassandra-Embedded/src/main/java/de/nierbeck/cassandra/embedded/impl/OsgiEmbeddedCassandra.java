@@ -136,4 +136,9 @@ public class OsgiEmbeddedCassandra implements Server, CassandraService,
 		}
 	}
 
+	@Override
+	public Integer getPort() {
+		return DatabaseDescriptor.getRpcPort();
+	}
+
 }

@@ -16,10 +16,11 @@ public class IsServiceRunning implements Action {
 
 	@Override
 	public Object execute() throws Exception {
-		if (cassandraServer.isRunning())
-			System.out.println("Embedded Cassandra is available.");
-		else
+		if (cassandraServer.isRunning()) {
+			System.out.println("Embedded Cassandra is available. on Port: "+cassandraServer.getPort());
+		} else {
 			System.out.println("Embedded Cassandra is stoped.");
+		}
 		return null;
 	}
 

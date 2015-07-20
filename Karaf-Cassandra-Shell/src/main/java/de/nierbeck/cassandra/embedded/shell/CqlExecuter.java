@@ -25,7 +25,7 @@ import com.datastax.driver.core.Session;
 @Service
 public class CqlExecuter extends CassandraCommandSupport {
 
-	@Argument(name = "cql", description = "CQL to execute", required = false, multiValued = false)
+	@Argument(name = "cql", description = "CQL to execute, must be quoted", required = false, multiValued = false)
 	private String cql;
 
 	@Option(name = "-f", aliases = {"--file"}, description = "A URI pointing to a CQL file to be executed by the command, must start with a URI schema like file:", required = false, multiValued = false)

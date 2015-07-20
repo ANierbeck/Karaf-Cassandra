@@ -14,6 +14,11 @@ public interface CassandraService {
 	 *         instance.
 	 */
 	boolean isRunning();
+	
+	/**
+	 * @return - the port the embedded Cassandra is using. 
+	 */
+	Integer getPort();
 
 	/**
 	 * stops the embedded Cassandra instance if running.
