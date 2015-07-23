@@ -82,7 +82,6 @@ public class TestBase {
 						.useDeployFolder(false),
 				logLevel(LogLevel.INFO),
 				keepRuntimeFolder(),
-				features(karafStandardFeature(), "wrap"),
 				features(
 						maven().groupId("de.nierbeck.cassandra")
 								.artifactId("Karaf-Cassandra-Feature")

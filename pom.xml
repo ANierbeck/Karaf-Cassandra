@@ -15,11 +15,16 @@
 		<slf4j.version>1.7.7</slf4j.version>
 		<karaf.version>4.0.0</karaf.version>
 		<junit.version>4.11</junit.version>
-		<cassandra.version>2.1.8</cassandra.version>
-		<cassandra-driver.version>2.1.7.1</cassandra-driver.version>
-		<hector.version>1.1-4</hector.version>
+		<cassandra.version>2.2.0</cassandra.version>
+		<cassandra-driver.version>2.2.0-rc1</cassandra-driver.version>
+		<hector.version>2.0-0</hector.version>
 		<inject.version>1.0</inject.version>
 		<dependencymanager.version>3.2.0</dependencymanager.version>
+		<metrics.version>3.1.0</metrics.version>
+		<netty.version>4.0.27.Final</netty.version>
+		<guava.version>16.0</guava.version>
+		<sigar.version>1.6.4</sigar.version>
+		<jna.version>4.0.0</jna.version>
 	</properties>
 
 	<modules>
@@ -96,6 +101,12 @@
 				<artifactId>hector-core</artifactId>
 				<version>${hector.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>io.dropwizard.metrics</groupId>
+				<artifactId>metrics-core</artifactId>
+				<version>${metrics.version}</version>
+			</dependency>
+			
 			<!-- dependencies -->
 			<dependency>
 				<groupId>org.apache.geronimo.specs</groupId>
@@ -140,6 +151,11 @@
 				<groupId>org.ops4j.pax.exam</groupId>
 				<artifactId>pax-exam-container-karaf</artifactId>
 				<version>${pax.exam.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.java.dev.jna</groupId>
+				<artifactId>jna</artifactId>
+				<version>${jna.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

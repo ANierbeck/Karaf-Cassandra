@@ -70,6 +70,8 @@ public class OsgiEmbeddedCassandra implements Server, CassandraService,
 			System.setProperty("cassandra.config", "file://" + cassandraConfig);
 		}
 		System.setProperty("cassandra-foreground", "false");
+		//cassandra.boot_without_jna=true
+		System.setProperty("cassandra.boot_without_jna", "true");
 
 		cassandraDaemon = new CassandraDaemon();
 		try {

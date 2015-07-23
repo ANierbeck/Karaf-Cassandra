@@ -18,26 +18,44 @@
 			<groupId>org.osgi</groupId>
 			<artifactId>org.osgi.compendium</artifactId>
 		</dependency>
-		        
-        <dependency>
-            <groupId>org.apache.karaf</groupId>
-            <artifactId>org.apache.karaf.util</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.karaf.shell</groupId>
-            <artifactId>org.apache.karaf.shell.core</artifactId>
-            <optional>true</optional>
-            <scope>provided</scope>
-        </dependency>
-        
+
+		<dependency>
+			<artifactId>slf4j-api</artifactId>
+			<groupId>org.slf4j</groupId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.karaf</groupId>
+			<artifactId>org.apache.karaf.util</artifactId>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.karaf.shell</groupId>
+			<artifactId>org.apache.karaf.shell.core</artifactId>
+			<optional>true</optional>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>Karaf-Cassandra-Service</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.cassandra</groupId>
 			<artifactId>cassandra-all</artifactId>
@@ -59,7 +77,29 @@
 					<artifactId>slf4j-api</artifactId>
 					<groupId>org.slf4j</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>log4j-over-slf4j</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>guava</artifactId>
+					<groupId>com.google.guava</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>netty-all</artifactId>
+					<groupId>io.netty</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jna</artifactId>
+					<groupId>net.java.dev.jna</groupId>
+				</exclusion>
 			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>net.java.dev.jna</groupId>
+			<artifactId>jna</artifactId>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -74,7 +114,12 @@
 					<groupId>com.google.guava</groupId>
 					<artifactId>guava</artifactId>
 				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
 			</exclusions>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -85,20 +130,41 @@
 					<groupId>org.slf4j</groupId>
 					<artifactId>slf4j-log4j12</artifactId>
 				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>guava</artifactId>
+					<groupId>com.google.guava</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>metrics-core</artifactId>
+					<groupId>com.yammer.metrics</groupId>
+				</exclusion>
 			</exclusions>
 			<!-- <scope>provided</scope> -->
 		</dependency>
 
-		<dependency>
-			<artifactId>slf4j-api</artifactId>
-			<groupId>org.slf4j</groupId>
-			<scope>provided</scope>
-		</dependency>
 
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.16</version>
+			<type>jar</type>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
@@ -125,9 +191,19 @@
 						<Import-Package>
 							org.slf4j.*,
 							org.osgi.framework.*,
+							io.netty.*,
+							com.datastax.driver.*;version="[2.2,3)",
+							de.nierbeck.cassandra.embedded,
+							com.sun.jna,
 							!sun.*,
+							!junit.framework,
+							!junit.textui,
 							*;resolution:=optional
 						</Import-Package>
+						<Private-Package>
+							org.apache.log4j, 
+							de.nierbeck.cassandra.embedded.impl
+						</Private-Package>
 						<Export-Package>
 							org.apache.cassandra.*
 						</Export-Package>
