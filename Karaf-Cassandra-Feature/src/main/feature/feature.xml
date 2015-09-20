@@ -34,7 +34,6 @@
 		<bundle dependency="true">mvn:io.netty/netty-transport-native-epoll/${netty.version}</bundle>
 		<bundle>mvn:de.nierbeck.cassandra/Karaf-Cassandra-Service/${project.version}</bundle>
 		<bundle>mvn:de.nierbeck.cassandra/Karaf-Cassandra-Embedded/${project.version}</bundle>
-		<bundle>mvn:de.nierbeck.cassandra/Karaf-Cassandra-Admin/${project.version}</bundle>
 	</feature>
 
 	<feature name="Karaf-Cassandra-Shell" version="${project.version}">

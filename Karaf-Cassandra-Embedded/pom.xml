@@ -204,7 +204,7 @@
 					<instructions>
 						<Bundle-Activator>de.nierbeck.cassandra.embedded.impl.Activator</Bundle-Activator>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-						<Karaf-Commands>de.nierbeck.cassandra.embedded.shell.admin*</Karaf-Commands>
+                        <Karaf-Commands>de.nierbeck.cassandra.admin.shell*</Karaf-Commands>
 						<Import-Package>
 							org.slf4j.*,
 							org.osgi.framework.*,
@@ -215,6 +215,8 @@
 							!sun.*,
 							!junit.framework,
 							!junit.textui,
+							!de.nierbeck.cassandra.admin.shell*,
+							!de.nierbeck.cassandra.embedded.impl,
 							*;resolution:=optional
 						</Import-Package>
 						<Private-Package>
@@ -222,6 +224,7 @@
 							de.nierbeck.cassandra.embedded.impl
 						</Private-Package>
 						<Export-Package>
+							de.nierbeck.cassandra.admin.shell*;version=${project.version};-noimport:=true,
 							org.apache.cassandra.*
 						</Export-Package>
 						<Embed-Dependency>*; scope=compile; type=!pom;
