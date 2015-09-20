@@ -1,11 +1,18 @@
+# Karaf - Cassandra
+
+[![Build Status](https://travis-ci.org/ops4j/org.ops4j.pax.web.svg?branch=master)](https://travis-ci.org/ops4j/org.ops4j.pax.web)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.ops4j.pax/web/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.ops4j.pax/web)
+
+it started as a showcase, now it's three features which make it easier to start an embedded Cassandra inside Karaf, 
+and use easy Karaf shell commands to communicate with a Cassandra from the Karaf shell. 
+Beware, don't use an embedded node in production, for that a std. Cassandra cluster is best to be used. 
+
 # Running Cassandra with Karaf
 
 This Showcase will give you a complete overview of Running Apache Cassandra on Apache Karaf. It contains everything that is needed to run an embedded Apache Cassandra inside Apache Karaf. It also gives you some administrative commands to use with an embedded Cassandra instance. 
 
 The feature file does also contain a feature for easy installation of all needed bundles to have a Apache Cassandra Client installed in Karaf. 
 Besides that there is also a Client Shell addition to Karaf contained in the Features. With it you are able to connect to any Cassandra instance via the Cassandra client api. You are able to execute cql skripts and commands that are already prepared, or you can take advantage of the great Command completion of Karaf and use the CQLSH like syntax for USE, DESCRIBE, CREATE, SELECT or INSERT. 
-
-!ATTENTION! If you want to run this showcase you'll need the enhanced Apache Karaf 4.0.0-SNAPSHOT version which is found at my [ANierbeck/CustomKaraf](https://github.com/ANierbeck/CustomKaraf) github project. It contains some enhancements I needed to do to the underlying shell to skip \(, \), \" \' and more to be interpreted by the shell as those are needed for the CQLSH like commands.
 
 More details about this project can be found at [blog.codecentric.de](https://blog.codecentric.de/?p=25821) and [notizblog.nierbeck.de](http://notizblog.nierbeck.de/2014/12/embedding-apache-cassandra/).  
 
