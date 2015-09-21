@@ -178,4 +178,9 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	<parent>
+		<groupId>de.nierbeck</groupId>
+		<artifactId>master</artifactId>
+		<version>1.0.0</version>
+	</parent>
 </project>
