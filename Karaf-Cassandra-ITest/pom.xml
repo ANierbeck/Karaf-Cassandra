@@ -93,7 +93,7 @@
 		
 		<dependency>
 			<groupId>de.nierbeck.cassandra</groupId>
-			<artifactId>Karaf-Cassandra-Service</artifactId>
+			<artifactId>Karaf-Cassandra-Embedded</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>

@@ -50,7 +50,6 @@
 	<modules>
 		<module>Karaf-Cassandra-Embedded</module>
 		<module>Karaf-Cassandra-Shell</module>
-		<module>Karaf-Cassandra-Service</module>
 		<module>Karaf-Cassandra-Feature</module>
 		<module>Karaf-Cassandra-ITest</module>
 	</modules>

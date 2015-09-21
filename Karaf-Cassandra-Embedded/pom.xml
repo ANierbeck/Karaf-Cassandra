@@ -224,6 +224,7 @@
 							de.nierbeck.cassandra.embedded.impl
 						</Private-Package>
 						<Export-Package>
+							de.nierbeck.cassandra.embedded*;version=${project.version};-noimport:=true,
 							de.nierbeck.cassandra.admin.shell*;version=${project.version};-noimport:=true,
 							org.apache.cassandra.*
 						</Export-Package>
