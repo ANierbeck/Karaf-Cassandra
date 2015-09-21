@@ -1,6 +1,8 @@
 # Karaf - Cassandra
 
 [![Build Status](https://travis-ci.org/ANierbeck/Karaf-Cassandra.svg)](https://travis-ci.org/ANierbeck/Karaf-Cassandra)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.nierbeck.cassandra/Karaf-Cassandra/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.nierbeck.cassandra/Karaf-Cassandra)
+
 
 it started as a showcase, now it's three features which make it easier to start an embedded Cassandra inside Karaf, 
 and use easy Karaf shell commands to communicate with a Cassandra from the Karaf shell. 
