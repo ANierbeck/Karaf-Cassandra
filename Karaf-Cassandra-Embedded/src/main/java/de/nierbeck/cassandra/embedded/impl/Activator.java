@@ -43,7 +43,7 @@ public class Activator implements BundleActivator{
 
 		@SuppressWarnings("rawtypes")
 		Dictionary props = new Hashtable();
-		props.put("service.pid", "de.nierbeck.cassandra,embedded");
+		props.put("service.pid", "de.nierbeck.cassandra.embedded");
 		cassandraService = context.registerService(new String[] {
 						ManagedService.class.getName(),
 						CassandraService.class.getName() },
