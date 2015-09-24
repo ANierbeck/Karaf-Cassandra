@@ -70,6 +70,8 @@ public class CassandraReconfigureTest extends TestBase{
 		configuration.setBundleLocation(null);
 		configuration.update(properties);
 		
+		Thread.sleep(2000L);
+		
 		CassandraService service = getOsgiService(CassandraService.class, null, 120000);
 		assertThat(service.isRunning(), is(true));
 		
