@@ -43,10 +43,10 @@ import de.nierbeck.cassandra.embedded.shell.SessionParameter;
  * DESCRIBE KEYSPACE keyspace_name
  * 		Output is a list of CQL commands that could be used to recreate the given keyspace, and the tables in it. In some cases, as the CQL interface matures, there will be some metadata about a keyspace that is not representable with CQL. That metadata will not be shown.
  * 
- * 		The <keyspacename> argument can be omitted when using a non-system keyspace; in that case, the current keyspace is described.
+ * 		The &lt;keyspacename&gt; argument can be omitted when using a non-system keyspace; in that case, the current keyspace is described.
  * 
- * DESCRIBE <FULL> SCHEMA
- * 		Output is a list of CQL commands that could be used to recreate the entire user-created schema. Works as though DESCRIBE KEYSPACE <k> was invoked for each keyspace k. Use DESCRIBE FULL SCHEMA to include the system keyspaces.
+ * DESCRIBE &lt;FULL&gt; SCHEMA
+ * 		Output is a list of CQL commands that could be used to recreate the entire user-created schema. Works as though DESCRIBE KEYSPACE &lt;k&gt; was invoked for each keyspace k. Use DESCRIBE FULL SCHEMA to include the system keyspaces.
  * 
  * DESCRIBE TABLES
  * 		Output is a list of the names of all tables in the current keyspace, or in all keyspaces if there is no current keyspace.
