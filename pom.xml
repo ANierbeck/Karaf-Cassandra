@@ -19,7 +19,7 @@
 	
 	<groupId>de.nierbeck.cassandra</groupId>
 	<artifactId>Karaf-Cassandra</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<properties>
@@ -230,6 +230,6 @@
 		<url>https://github.com/ANierbeck/Karaf-Cassandra</url>
 		<connection>scm:git:git://github.com/ANierbeck/Karaf-Cassandra.git</connection>
 		<developerConnection>scm:git:git@github.com:ANierbeck/Karaf-Cassandra.git</developerConnection>
-	  <tag>Karaf-Cassandra-1.0.0</tag>
+	  <tag>HEAD</tag>
   </scm>
 </project>
