@@ -227,4 +227,9 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+	<scm>
+		<url>https://github.com/ANierbeck/Karaf-Cassandra</url>
+		<connection>scm:git:git://github.com/ANierbeck/Karaf-Cassandra.git</connection>
+		<developerConnection>scm:git:git@github.com:ANierbeck/Karaf-Cassandra.git</developerConnection>
+	</scm>
 </project>
