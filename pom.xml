@@ -2,26 +2,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<!-- 
-	
-   Copyright 2015 Achim Nierbeck
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-	
-	
-	 -->
+	<!-- Copyright 2015 Achim Nierbeck Licensed under the Apache License, Version 
+		2.0 (the "License"); you may not use this file except in compliance with 
+		the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+		Unless required by applicable law or agreed to in writing, software distributed 
+		under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
+		OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+		the specific language governing permissions and limitations under the License. -->
 
 	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>de.nierbeck</groupId>
+		<artifactId>master</artifactId>
+		<version>1.0.0</version>
+	</parent>
+	
 	<groupId>de.nierbeck.cassandra</groupId>
 	<artifactId>Karaf-Cassandra</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
@@ -56,6 +52,22 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<!-- Sub-project dependencies -->
+			<dependency>
+				<groupId>de.nierbeck.cassandra</groupId>
+				<artifactId>Karaf-Cassandra-Feature</artifactId>
+				<version>${project.version}</version>
+				<scope>test</scope>
+				<type>xml</type>
+				<classifier>features</classifier>
+			</dependency>
+			<dependency>
+				<groupId>de.nierbeck.cassandra</groupId>
+				<artifactId>Karaf-Cassandra-Embedded</artifactId>
+				<version>${project.version}</version>
+				<scope>test</scope>
+			</dependency>
+
 			<!-- OSGi -->
 			<dependency>
 				<groupId>org.osgi</groupId>
@@ -71,6 +83,13 @@
 			</dependency>
 
 			<!-- Karaf -->
+			<dependency>
+				<groupId>org.apache.karaf.features</groupId>
+				<artifactId>framework</artifactId>
+				<version>${karaf.version}</version>
+				<type>kar</type>
+				<scope>provided</scope>
+			</dependency>
 			<dependency>
 				<groupId>org.apache.karaf</groupId>
 				<artifactId>apache-karaf</artifactId>
@@ -148,6 +167,13 @@
 				<artifactId>logback-core</artifactId>
 				<version>${logback.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>1.2.16</version>
+				<type>jar</type>
+				<scope>provided</scope>
+			</dependency>
 
 			<!-- Test -->
 			<dependency>
@@ -177,9 +203,28 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	<parent>
-		<groupId>de.nierbeck</groupId>
-		<artifactId>master</artifactId>
-		<version>1.0.0</version>
-	</parent>
+
+	<build>
+		<plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+        </plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.karaf.tooling</groupId>
+					<artifactId>karaf-maven-plugin</artifactId>
+					<version>${karaf.version}</version>
+					<extensions>true</extensions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>

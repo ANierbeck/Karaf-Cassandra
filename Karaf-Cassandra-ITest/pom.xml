@@ -85,7 +85,6 @@
 		<dependency>
 			<groupId>de.nierbeck.cassandra</groupId>
 			<artifactId>Karaf-Cassandra-Feature</artifactId>
-			<version>${project.version}</version>
 			<scope>test</scope>
 			<type>xml</type>
 			<classifier>features</classifier>
@@ -94,7 +93,6 @@
 		<dependency>
 			<groupId>de.nierbeck.cassandra</groupId>
 			<artifactId>Karaf-Cassandra-Embedded</artifactId>
-			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 		
