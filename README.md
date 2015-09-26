@@ -111,3 +111,36 @@ Issue the following commands in your Karaf Shell:
 `feature:install Karaf-Cassandra-Embedded Karaf-Cassandra-Shell`
 
 This will install all of the above described features. 
+
+# Deployment Considerations
+
+There are some special deployment considerations that can improve your experience with the plugin. Some of them are listed here, but please don't hesitate to contribute more!
+
+## Adding Hyperic SIGAR for Karaf-Cassandra-Embedded
+
+It's not obvious what has to happen to get SIGAR set up in Karaf and it's an obscure enough JAR that there's not a lot of leads on the net. The developer does not manage the classpath in Karaf and SIGAR is a native library. It's not sufficient to simply add the native library to `$KARAF_HOME/lib/boot` as a result.
+ 
+1. Create a directory where the libraries should live, such as `$KARAF_HOME/lib/sigar`. 
+1. Unpack the contents of a SIGAR native library [such as the one found here](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.fusesource%22%20AND%20a%3A%22sigar%22%20AND%20l%3A%22native%22) into the directory you created above.
+1. Edit your `$KARAF_HOME/bin/setenv` to add the path to your native library: `export KARAF_OPTS="-Djava.library.path=/Users/brian/dev/apache-karaf-4.0.1/lib/sigar"`. \(NB: don't think variable interpolation is used here, so the full path is required\).
+1. Launch Karaf, load the feature, and try to install the `Karaf-Cassandra-Embedded` feature. You should get an exception. Note the name of the file that it is looking for. For instance, on OSX, the library is called `libsigar-universal64-macosx.dylib`. **You need to rename the library in `$KARAF_HOME/lib/sigar` to exactly this name!** 
+1. Try launching again, the exception should not occur again.
+
+## Setting the Karaf-Cassandra-Embedded configuration
+
+One way to configure `Karaf-Cassandra-Embedded` in your build is by having the Karaf features system update the location of a known configuration on disk. `$KARAF-HOME/etc` is an ideal location for such a file. To lower the bar for new developers, you can combine the loading of `Karaf-Cassandra-Embedded` and the configuration in one step:
+
+1. Add a Cassandra configuration artifact to your repository. In this example, I have added it with a `type` of 'yaml' and a `classifier` of 'config'. 
+1. Create a feature for the project that will require `Karaf-Cassandra-Embedded`:
+```
+    <repository>mvn:de.nierbeck.cassandra/Karaf-Cassandra-Feature/1.0.1-SNAPSHOT/xml/features</repository>
+    <feature name="${project.artifactId}" version="${project.version}" description="${project.artifactId}">
+        <configfile finalname="etc/cassandra.yaml">mvn:${project.groupId}/${project.artifactId}/${project.version}/yaml/config</configfile>
+        <config name="de.nierbeck.cassandra.embedded">
+            cassandra.yaml = ${karaf.base}/etc/cassandra.yaml
+        </config>
+        <feature version="1.0.1-SNAPSHOT">Karaf-Cassandra-Embedded</feature>
+        ...
+    </feature>
+```
+1. When this feature is loaded, the config file will be installed and the configuration key set. \(NB: the config file may install after the `Karaf-Cassandra-Embedded` feature is launched due to dependency ordering. In that case, it won't take effect until the second launch of `Karaf-Cassandra-Embedded`. Maybe someone can update this config so that's not a problem...\)
