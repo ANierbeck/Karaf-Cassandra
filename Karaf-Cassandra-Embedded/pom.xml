@@ -200,6 +200,8 @@
 							org.slf4j.*,
 							org.osgi.framework.*,
 							io.netty.*,
+							org.apache.karaf.shell.api.action;version="[4.0,5)",
+ 							org.apache.karaf.shell.api.action.lifecycle;version="[4.0,5)",
 							com.datastax.driver.*;version="[2.2,3)",
 							de.nierbeck.cassandra.embedded,
 							com.sun.jna,

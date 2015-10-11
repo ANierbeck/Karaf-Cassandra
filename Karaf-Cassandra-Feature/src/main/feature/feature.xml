@@ -28,7 +28,7 @@
     </feature>
 
 	<feature name='Karaf-Cassandra-Embedded' description='${project.name}' version='${project.version}'	>
-		<feature version="${karaf.version}">shell</feature>
+		<feature>shell</feature>
 		<feature version="${project.version}">Karaf-Cassandra-Client</feature>
 		<bundle dependency="true">mvn:net.java.dev.jna/jna/${jna.version}</bundle>
 		<bundle dependency="true">mvn:io.netty/netty-transport-native-epoll/${netty.version}</bundle>
@@ -37,7 +37,7 @@
 
 	<feature name="Karaf-Cassandra-Shell" version="${project.version}">
 		<feature>Karaf-Cassandra-Client</feature>
-		<feature version="${karaf.version}">shell</feature>
+		<feature>shell</feature>
 		<bundle>mvn:de.nierbeck.cassandra/Karaf-Cassandra-Shell/${project.version}</bundle>
 	</feature>
 </features>
