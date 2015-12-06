@@ -118,7 +118,7 @@ public class CqlExecuter extends CassandraCommandSupport {
 			org.apache.karaf.shell.support.table.Row shellRow = table.addRow();
 
 			for (Definition definition : columnDefinitions) {
-				Class<?> asJavaClass = definition.getType().asJavaClass();
+				Class<?> asJavaClass = definition.getType().getClass();
 
 				if (String.class == asJavaClass) {
 					shellRow.addContent(row.getString(definition.getName()));
