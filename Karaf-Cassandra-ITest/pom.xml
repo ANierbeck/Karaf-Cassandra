@@ -21,7 +21,7 @@
     <parent>
         <artifactId>Karaf-Cassandra</artifactId>
         <groupId>de.nierbeck.cassandra</groupId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.1</version>
     </parent>
     <artifactId>Karaf-Cassandra-ITest</artifactId>
 
