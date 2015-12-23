@@ -38,6 +38,20 @@ hinted_handoff_throttle_in_kb: 1024
 # cross-dc handoff tends to be slower
 max_hints_delivery_threads: 2
 
+# Directory where Cassandra should store hints.
+# If not set, the default directory is $CASSANDRA_HOME/data/hints.
+# hints_directory: /var/lib/cassandra/hints
+hints_directory: data/cassandra/embedded/hints
+
+# How often hints should be flushed from the internal buffers to disk.
+# Will *not* trigger fsync.
+hints_flush_period_in_ms: 10000
+
+# Maximum size for a single hints file, in megabytes.
+max_hints_file_size_in_mb: 128
+
+
+
 # The following setting populates the page cache on memtable flush and compaction
 # WARNING: Enable this setting only when the whole node's data fits in memory.
 # Defaults to: false

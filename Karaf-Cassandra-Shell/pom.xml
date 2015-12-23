@@ -22,7 +22,7 @@
     <parent>
         <artifactId>Karaf-Cassandra</artifactId>
         <groupId>de.nierbeck.cassandra</groupId>
-        <version>1.0.2-SNAPSHOT</version>
+        <version>1.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>Karaf-Cassandra-Shell</artifactId>
@@ -83,7 +83,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>2.5.2</version>
+                <version>3.0.1</version>
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>

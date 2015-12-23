@@ -72,8 +72,7 @@ public class OsgiEmbeddedCassandra implements Server, CassandraService,
 		if (cassandraDaemon == null)
 			return false;
 
-		return (cassandraDaemon.nativeServer != null && cassandraDaemon.nativeServer
-				.isRunning())
+		return (cassandraDaemon.isNativeTransportRunning())
 				|| (cassandraDaemon.thriftServer != null && cassandraDaemon.thriftServer
 						.isRunning());
 	}
@@ -126,7 +125,6 @@ public class OsgiEmbeddedCassandra implements Server, CassandraService,
 
 	}
 
-	@Override
 	public void cleanUp() {
 		if (isRunning()) {
 			dropKeyspaces();
@@ -154,7 +152,6 @@ public class OsgiEmbeddedCassandra implements Server, CassandraService,
 		}
 	}
 
-	@Override
 	public Integer getPort() {
 		return DatabaseDescriptor.getRpcPort();
 	}

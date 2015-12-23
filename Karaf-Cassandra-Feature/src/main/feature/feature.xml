@@ -18,7 +18,7 @@
     
     <feature name='Karaf-Cassandra-Client' description='${project.name}' version='${project.version}'>
         <bundle dependency="true">mvn:io.dropwizard.metrics/metrics-core/${metrics.version}</bundle>
-        <bundle>mvn:com.datastax.cassandra/cassandra-driver-core/${cassandra-driver.version}</bundle>
+        <bundle dependency="true">mvn:com.datastax.cassandra/cassandra-driver-core/${cassandra-driver.version}</bundle>
         <bundle dependency="true">mvn:com.google.guava/guava/${guava.version}</bundle>
         <bundle dependency="true">mvn:io.netty/netty-handler/${netty.version}</bundle>
         <bundle dependency="true">mvn:io.netty/netty-buffer/${netty.version}</bundle>
