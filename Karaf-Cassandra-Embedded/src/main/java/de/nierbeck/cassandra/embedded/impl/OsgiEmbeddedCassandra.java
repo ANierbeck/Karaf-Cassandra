@@ -87,12 +87,13 @@ public class OsgiEmbeddedCassandra implements Server, CassandraService,
 		System.setProperty("cassandra-foreground", "false");
 		//cassandra.boot_without_jna=true
 		System.setProperty("cassandra.boot_without_jna", "true");
+		System.setProperty("java.net.preferIPv4Stack" , "true");
 
 		cassandraDaemon = new CassandraDaemon(true);
 		try {
 			logger.info("initializing cassandra deamon");
 			cassandraDaemon.init(null);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 		logger.info("starting cassandra deamon");
