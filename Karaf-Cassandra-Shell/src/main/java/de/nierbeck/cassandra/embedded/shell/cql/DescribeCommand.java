@@ -93,7 +93,7 @@ public class DescribeCommand implements Action {
 			case "TABLES":
 			case "tables":
 				execute = session
-						.execute("select columnfamily_name from system.schema_columnfamilies where keyspace_name = '"
+						.execute("select table_name from system_schema.tables where keyspace_name = '"
 								+ session.getLoggedKeyspace() + "';");
 				break;
 			case "table":
@@ -106,13 +106,13 @@ public class DescribeCommand implements Action {
 					tableName = split[1].trim();
 				}
 				String select = String
-						.format("SELECT column_name, type FROM system.schema_columns WHERE keyspace_name = '%s' AND columnfamily_name = '%s'",
+						.format("SELECT column_name, type FROM system_schema.columns WHERE keyspace_name = '%s' AND table_name = '%s' ALLOW FILTERING",
 								keyspaceName, tableName);
 				execute = session.execute(select);
 				break;
 			case "keyspaces":
 			default:
-				execute = session.execute("select * from  system.schema_keyspaces;");
+				execute = session.execute("select * from  system_schema.keyspaces;");
 				break;
 		}
 

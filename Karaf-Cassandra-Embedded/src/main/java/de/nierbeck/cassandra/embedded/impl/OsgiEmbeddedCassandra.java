@@ -16,7 +16,6 @@
  */
 package de.nierbeck.cassandra.embedded.impl;
 
-import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.util.Dictionary;
 import java.util.List;
@@ -26,11 +25,6 @@ import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
-
-import me.prettyprint.cassandra.service.CassandraHostConfigurator;
-import me.prettyprint.hector.api.Cluster;
-import me.prettyprint.hector.api.ddl.KeyspaceDefinition;
-import me.prettyprint.hector.api.factory.HFactory;
 
 import org.apache.cassandra.config.DatabaseDescriptor;
 import org.apache.cassandra.config.Schema;
@@ -42,13 +36,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.nierbeck.cassandra.embedded.CassandraService;
+import me.prettyprint.cassandra.service.CassandraHostConfigurator;
+import me.prettyprint.hector.api.Cluster;
+import me.prettyprint.hector.api.ddl.KeyspaceDefinition;
+import me.prettyprint.hector.api.factory.HFactory;
 
 public class OsgiEmbeddedCassandra implements Server, CassandraService,
 		ManagedService {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	private static final String INTERNAL_CASSANDRA_KEYSPACE = "system";
+    private static final String INTERNAL_CASSANDRA_KEYSPACE = "system_schema";
 	private static final String INTERNAL_CASSANDRA_AUTH_KEYSPACE = "system_auth";
 	private static final String INTERNAL_CASSANDRA_TRACES_KEYSPACE = "system_traces";
 
@@ -90,29 +88,34 @@ public class OsgiEmbeddedCassandra implements Server, CassandraService,
 		System.setProperty("java.net.preferIPv4Stack" , "true");
 
 		cassandraDaemon = new CassandraDaemon(true);
-		try {
-			logger.info("initializing cassandra deamon");
-			cassandraDaemon.init(null);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+//		try {
+//			logger.info("initializing cassandra deamon");
+//			cassandraDaemon.init(null);
+//		} catch (Exception e) {
+//			throw new RuntimeException(e);
+//		}
 		logger.info("starting cassandra deamon");
-		cassandraDaemon.start();
-
+//		cassandraDaemon.start();
+		cassandraDaemon.activate();
+		
 		logger.info("cassandra up and runnign");
 	}
 
 	@Override
 	public void stop() {
 		logger.info("Stopping cassandra deamon");
-		logger.info("cleaning up the Schema keys");
-		Schema.instance.clear();
-		logger.info("stopping cassandra");
-		cassandraDaemon.stop();
-		logger.info("destroying the cassandra deamon");
-		cassandraDaemon.destroy();
+
+        cassandraDaemon.deactivate();
+        
+//		logger.info("cleaning up the Schema keys");
+//		Schema.instance.clear();
+//		logger.info("stopping cassandra");
+//		cassandraDaemon.stop();
+//		logger.info("destroying the cassandra deamon");
+//		cassandraDaemon.destroy();
 		logger.info("cassandra is removed");
 		cassandraDaemon = null;
+		
 
 		logger.info("removing MBean");
 		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
@@ -134,7 +137,7 @@ public class OsgiEmbeddedCassandra implements Server, CassandraService,
 
 	private void dropKeyspaces() {
 		String host = DatabaseDescriptor.getRpcAddress().getHostName();
-		int port = DatabaseDescriptor.getRpcPort();
+		int port = DatabaseDescriptor.getNativeTransportPort();
 		logger.debug("Cleaning cassandra keyspaces on " + host + ":" + port);
 		Cluster cluster = HFactory.getOrCreateCluster("TestCluster",
 				new CassandraHostConfigurator(host + ":" + port));
@@ -154,7 +157,7 @@ public class OsgiEmbeddedCassandra implements Server, CassandraService,
 	}
 
 	public Integer getPort() {
-		return DatabaseDescriptor.getRpcPort();
+		return DatabaseDescriptor.getNativeTransportPort();
 	}
 
 }

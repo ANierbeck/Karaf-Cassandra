@@ -33,6 +33,8 @@ import org.apache.karaf.shell.support.table.ShellTable;
 
 import com.datastax.driver.core.ColumnDefinitions;
 import com.datastax.driver.core.ColumnDefinitions.Definition;
+import com.datastax.driver.core.DataType;
+import com.datastax.driver.core.DataType.Name;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
@@ -118,23 +120,27 @@ public class CqlExecuter extends CassandraCommandSupport {
 			org.apache.karaf.shell.support.table.Row shellRow = table.addRow();
 
 			for (Definition definition : columnDefinitions) {
-				Class<?> asJavaClass = definition.getType().getClass();
-
-				if (String.class == asJavaClass) {
+			    boolean isCollection = definition.getType().isCollection();
+				
+				Name definitionName = definition.getType().getName();
+				
+                if (DataType.Name.TEXT.isCompatibleWith(definitionName)) {
 					shellRow.addContent(row.getString(definition.getName()));
-				} else if (Integer.class == asJavaClass) {
+				} else if (DataType.Name.INT.isCompatibleWith(definitionName)) {
 					shellRow.addContent(row.getInt(definition.getName()));
-				} else if (Double.class == asJavaClass) {
+				} else if (DataType.Name.DOUBLE.isCompatibleWith(definitionName)) {
 					shellRow.addContent(row.getDouble(definition.getName()));
-				} else if (UUID.class == asJavaClass) {
+				} else if (DataType.Name.UUID.isCompatibleWith(definitionName)) {
 					shellRow.addContent(row.getUUID(definition.getName())
 							.toString());
-				} else if (List.class == asJavaClass) {
-					shellRow.addContent("List:" + definition.getType());
-				} else if (BigInteger.class == asJavaClass) {
+				} else if (isCollection) {
+					shellRow.addContent("List:" + definitionName);
+				} else if (DataType.Name.BIGINT.isCompatibleWith(definitionName)) {
 					shellRow.addContent(row.getLong(definition.getName()));
-				} else if (Long.class == asJavaClass) {
-					shellRow.addContent(row.getLong(definition.getName()));
+				} else if (DataType.Name.FLOAT.isCompatibleWith(definitionName)) {
+					shellRow.addContent(row.getFloat(definition.getName()));
+				} else if (DataType.Name.BOOLEAN.isCompatibleWith(definitionName)) {
+				    shellRow.addContent(row.getBool(definition.getName()));
 				} else {
 					shellRow.addContent(definition.getType());
 				}

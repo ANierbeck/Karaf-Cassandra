@@ -151,10 +151,10 @@ public class SelectsCompleter implements Completer {
 						//keyspace selected add Tables to completion
 						delegate.getStrings().clear();
 						ResultSet execute = cassandraSession.execute(String.format(
-								"select columnfamily_name from system.schema_columnfamilies where keyspace_name = '%s';",
+								"select table_name from system_schema.tables where keyspace_name = '%s';",
 								loggedKeyspace));
 						for (Row row : execute) {
-							String table = row.getString("columnfamily_name");
+							String table = row.getString("table_name");
 							delegate.getStrings().add(table);
 						}
 					} else if ("FROM".equalsIgnoreCase(validArgument) && currentArgument != null && currentArgument.contains(".")) {
@@ -162,10 +162,10 @@ public class SelectsCompleter implements Completer {
 						delegate.getStrings().clear();
 						String keyspace = currentArgument.substring(0, currentArgument.indexOf("."));
 						ResultSet execute = cassandraSession.execute(String.format(
-								"select columnfamily_name from system.schema_columnfamilies where keyspace_name = '%s';",
+								"select table_name from system_schema.tables where keyspace_name = '%s';",
 								keyspace));
 						for (Row row : execute) {
-							String table = row.getString("columnfamily_name");
+							String table = row.getString("table_name");
 							delegate.getStrings().add(keyspace + "." + table);
 						}
 					} else if (!arguments.contains("FROM")) {
@@ -184,10 +184,10 @@ public class SelectsCompleter implements Completer {
 							keyspace = split[0].trim();
 							table = split[1].trim();
 						}
-						String select = String.format("SELECT columnfamily_name, column_name FROM system.schema_columns where keyspace_name = '%s';", keyspace);
+						String select = String.format("SELECT table_name, column_name FROM system_schema.columns where keyspace_name = '%s';", keyspace);
 						ResultSet execute = cassandraSession.execute(select);
 						for (Row row : execute) {
-							String tableName = row.getString("columnfamily_name");
+							String tableName = row.getString("table_name");
 							if (table.equalsIgnoreCase(tableName))
 								delegate.getStrings().add(row.getString("column_name"));
 						}

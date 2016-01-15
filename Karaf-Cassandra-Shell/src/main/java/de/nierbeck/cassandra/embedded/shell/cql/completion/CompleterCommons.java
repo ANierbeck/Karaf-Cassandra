@@ -27,7 +27,7 @@ public class CompleterCommons {
 			com.datastax.driver.core.Session cassandraSession) {
 		try {
 			ResultSet execute = cassandraSession
-					.execute("SELECT keyspace_name FROM system.schema_keyspaces;");
+					.execute("SELECT keyspace_name FROM system_schema.keyspaces;");
 			for (Row row : execute) {
 				String keySpace = row.getString("keyspace_name");
 				delegate.getStrings().add(keySpace);
