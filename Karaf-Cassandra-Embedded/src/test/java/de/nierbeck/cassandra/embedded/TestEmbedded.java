@@ -17,6 +17,10 @@
 package de.nierbeck.cassandra.embedded;
 
 import java.io.IOException;
+import java.util.Dictionary;
+import java.util.Hashtable;
+
+import org.osgi.service.cm.ConfigurationException;
 
 import de.nierbeck.cassandra.embedded.impl.OsgiEmbeddedCassandra;
 
@@ -24,7 +28,7 @@ public class TestEmbedded {
 
 	private static OsgiEmbeddedCassandra cassandra;
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, ConfigurationException {
 		cassandra = new OsgiEmbeddedCassandra();
 		cassandra.start();
 
