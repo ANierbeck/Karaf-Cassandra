@@ -54,10 +54,15 @@ public class CassandraAdminTest extends TestBase{
 	@Test
 	public void cassandraAdminIsRunning() throws Exception {
 
-		assertThat(executeCommand("cassandra-admin:isRunning"),
-				containsString("Embedded Cassandra is available"));
+        assertThat(executeCommand("cassandra-admin:isRunning"),
+                containsString("Embedded Cassandra is available"));
 	}
 
+	@Test
+	public void cassandraAdminIsRunningWithCorrectPort() throws Exception {
+	    assertThat(executeCommand("cassandra-admin:isRunning"),
+                containsString("on Port: 9142"));
+	}
 	
 	@Test
 	public void cassandraAdminStop() throws Exception {
