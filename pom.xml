@@ -19,7 +19,7 @@
 	
 	<groupId>de.nierbeck.cassandra</groupId>
 	<artifactId>Karaf-Cassandra</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<properties>
@@ -28,9 +28,9 @@
 		<pax.url.version>2.1.0</pax.url.version>
 		<logback.version>1.0.4</logback.version>
 		<slf4j.version>1.7.7</slf4j.version>
-		<karaf.version>4.0.3</karaf.version>
+		<karaf.version>4.0.4</karaf.version>
 		<junit.version>4.11</junit.version>
-		<cassandra.version>2.2.4</cassandra.version>
+		<cassandra.version>2.2.5</cassandra.version>
 		<cassandra-driver.version>2.2.0-rc3</cassandra-driver.version>
 		<hector.version>2.0-0</hector.version>
 		<inject.version>1.0</inject.version>
