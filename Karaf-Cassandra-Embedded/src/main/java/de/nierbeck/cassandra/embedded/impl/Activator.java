@@ -39,7 +39,7 @@ public class Activator implements BundleActivator{
 	@SuppressWarnings("unchecked")
 	@Override
 	public void start(BundleContext context) throws Exception {
-		cassandra = new OsgiEmbeddedCassandra();
+		cassandra = new OsgiEmbeddedCassandra(context);
 
 		@SuppressWarnings("rawtypes")
 		Dictionary props = new Hashtable();

@@ -17,8 +17,6 @@
 package de.nierbeck.cassandra.embedded;
 
 import java.io.IOException;
-import java.util.Dictionary;
-import java.util.Hashtable;
 
 import org.osgi.service.cm.ConfigurationException;
 
@@ -29,7 +27,7 @@ public class TestEmbedded {
 	private static OsgiEmbeddedCassandra cassandra;
 
 	public static void main(String[] args) throws IOException, ConfigurationException {
-		cassandra = new OsgiEmbeddedCassandra();
+		cassandra = new OsgiEmbeddedCassandra(null);
 		cassandra.start();
 
 		System.out.println("started");
@@ -38,12 +36,14 @@ public class TestEmbedded {
 
 		System.out.println("stopped");
 
-		System.out.println("going for restaret");
+		System.out.println("going for restart");
 
 		cassandra.start();
 
 		System.out.println("restarted");
 
+        cassandra.stop();
+        
 		System.exit(1);
 
 	}
