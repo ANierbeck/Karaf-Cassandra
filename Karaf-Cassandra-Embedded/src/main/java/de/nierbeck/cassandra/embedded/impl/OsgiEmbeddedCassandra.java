@@ -16,15 +16,14 @@
  */
 package de.nierbeck.cassandra.embedded.impl;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.URI;
+import java.net.UnknownHostException;
 import java.util.Dictionary;
 import java.util.HashMap;
-import java.util.Map;
 
-import org.apache.cassandra.config.DatabaseDescriptor;
-import org.apache.cassandra.service.CassandraDaemon;
 import org.apache.cassandra.service.CassandraDaemon.Server;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.cm.ConfigurationException;
@@ -34,12 +33,17 @@ import org.slf4j.LoggerFactory;
 
 import de.nierbeck.cassandra.embedded.CassandraRunner;
 import de.nierbeck.cassandra.embedded.CassandraService;
+import jline.internal.Log;
 
 public class OsgiEmbeddedCassandra implements Server, CassandraService, ManagedService {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final String NATIVE_TRANSPORT_PORT = "native_transport_port";
 
-    private CassandraDaemon cassandraDaemon;
+    private static final String CASSANDRA_YAML = "cassandra.yaml";
+
+    private static final String JMX_PORT = "jmx_port";
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private String cassandraConfig;
 
@@ -47,110 +51,79 @@ public class OsgiEmbeddedCassandra implements Server, CassandraService, ManagedS
 
     private BundleContext context;
 
+    private String native_transport_port;
+
+    private String jmx_port;
+    
+    private static String default_native_transport_port = "9142";
+
     public OsgiEmbeddedCassandra(BundleContext context) {
         this.context = context;
     }
 
     @Override
     public void updated(Dictionary<String, ?> properties) throws ConfigurationException {
+        logger.info("Updating Service with new Properties");
         if (isRunning()) {
+            logger.info("stopping running instance");
             stop();
         }
         if (properties != null) {
-            cassandraConfig = (String) properties.get("cassandra.yaml");
+            cassandraConfig = (String) properties.get(CASSANDRA_YAML);
+            native_transport_port = (String) properties.get(NATIVE_TRANSPORT_PORT);
+            jmx_port = (String) properties.get(JMX_PORT);
         }
+        logger.info("starting cassandra service");
         start();
     }
 
     @Override
     public boolean isRunning() {
-        if (cassandraDaemon == null)
+        if (runner == null)
             return false;
-
-        return (cassandraDaemon.isNativeTransportRunning())
-                || (cassandraDaemon.thriftServer != null && cassandraDaemon.thriftServer.isRunning());
+        
+        try {
+            return CassandraRunner.waitForPortOpen(InetAddress.getByName("localhost"), Integer.parseInt(default_native_transport_port), 2000);
+        } catch (UnknownHostException e) {
+            Log.error("Cassandra failed to start: ", e);
+            return false;
+        }
     }
 
     @Override
     public void start() {
         logger.info("starting Cassandra in Embedded mode");
-        HashMap<String, String> properties = new HashMap();
-        properties.put("native_transport_port", "9142");
+        HashMap<String, String> properties = new HashMap<>();
+        properties.put(NATIVE_TRANSPORT_PORT, getNativePort());
         properties.put("rpc_address", "localhost");
+        if (jmx_port != null && !jmx_port.isEmpty())
+            properties.put(JMX_PORT, jmx_port);
 
         try {
             InputStream configFile = null;
             if (cassandraConfig != null) {
-                configFile = new File(cassandraConfig).toURL().openStream();
+                URI uri = URI.create(cassandraConfig);
+                configFile = uri.toURL().openStream();
             } else {
                 if (context != null)
-                    configFile = context.getBundle().getEntry("cassandra.yaml").openStream();
+                    configFile = context.getBundle().getEntry(CASSANDRA_YAML).openStream();
                 else
-                    configFile = getClass().getClassLoader().getResourceAsStream("cassandra.yaml");
+                    configFile = getClass().getClassLoader().getResourceAsStream(CASSANDRA_YAML);
             }
             runner = new CassandraRunner(configFile, properties, true);
-            logger.info("cassandra up and runnign");
+            logger.info("cassandra up and running");
         } catch (IOException e) {
-            logger.error("can't start Cassandra");
+            logger.error("can't start Cassandra", e);
         }
 
     }
 
-    // @Override
-    // public void stop() {
-    // logger.info("Stopping cassandra deamon");
-    //
-    // logger.info("cleaning up the Schema keys");
-    //
-    // Schema.instance.clear();
-    //
-    // logger.info("stopping cassandra");
-    //
-    // cassandraDaemon.deactivate();
-    // logger.info("cassandra is removed");
-    // cassandraDaemon = null;
-    //
-    //
-    // logger.info("removing MBean");
-    // MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-    // try {
-    // mbs.unregisterMBean(new ObjectName(
-    // "org.apache.cassandra.db:type=DynamicEndpointSnitch"));
-    // } catch (MBeanRegistrationException | InstanceNotFoundException
-    // | MalformedObjectNameException e) {
-    // logger.warn("Couldn't remove MBean");
-    // }
-    // }
-    //
-    // public void cleanUp() {
-    // if (isRunning()) {
-    // dropKeyspaces();
-    // }
-    // }
-    //
-    // private void dropKeyspaces() {
-    // String host = DatabaseDescriptor.getRpcAddress().getHostName();
-    // int port = DatabaseDescriptor.getNativeTransportPort();
-    // logger.debug("Cleaning cassandra keyspaces on " + host + ":" + port);
-    // Cluster cluster = HFactory.getOrCreateCluster("TestCluster",
-    // new CassandraHostConfigurator(host + ":" + port));
-    // /* get all keyspace */
-    // List<KeyspaceDefinition> keyspaces = cluster.describeKeyspaces();
-    //
-    // /* drop all keyspace except internal cassandra keyspace */
-    // for (KeyspaceDefinition keyspaceDefinition : keyspaces) {
-    // String keyspaceName = keyspaceDefinition.getName();
-    //
-    // if (!INTERNAL_CASSANDRA_KEYSPACE.equals(keyspaceName)
-    // && !INTERNAL_CASSANDRA_AUTH_KEYSPACE.equals(keyspaceName)
-    // && !INTERNAL_CASSANDRA_TRACES_KEYSPACE.equals(keyspaceName)) {
-    // cluster.dropKeyspace(keyspaceName);
-    // }
-    // }
-    // }
+    private String getNativePort() {
+        return native_transport_port != null ? native_transport_port : default_native_transport_port;
+    }
 
     public Integer getPort() {
-        return DatabaseDescriptor.getNativeTransportPort();
+        return Integer.valueOf(getNativePort());
     }
 
     @Override
@@ -159,7 +132,9 @@ public class OsgiEmbeddedCassandra implements Server, CassandraService, ManagedS
 
     @Override
     public void stop() {
+        logger.info("stopping Cassandra process");
         runner.destroy();
+        runner = null;
     }
 
 }

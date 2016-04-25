@@ -54,20 +54,19 @@ public class CassandraAdminTest extends TestBase{
 	@Test
 	public void cassandraAdminIsRunning() throws Exception {
 
-		assertThat(executeCommand("cassandra-admin:isRunning"),
-				containsString("Embedded Cassandra is available"));
+		assertThat(executeCommand("cassandra-admin:isRunning"), containsString("Embedded Cassandra is available"));
 	}
 
 	@Test
     public void cassandraAdminIsRunningWithPort() throws Exception {
-
-        assertThat(executeCommand("cassandra-admin:isRunning"),
-                containsString("on Port: 9142"));
+        assertThat(executeCommand("cassandra-admin:isRunning"), containsString("on Port: 9142"));
     }
 	
 	@Test
 	public void cassandraAdminStop() throws Exception {
 		assertThat(executeCommand("cassandra-admin:stop"), containsString("Embedded Cassandra stoped!"));
+		
+		Thread.sleep(2000);
 		
 		assertThat(cassandraService.isRunning(), is(false));
 		
@@ -79,6 +78,8 @@ public class CassandraAdminTest extends TestBase{
 	public void cassandraAdminStart() throws Exception {
 		cassandraService.stop();
 		
+		Thread.sleep(2000);
+		
 		assertThat(executeCommand("cassandra-admin:start"), containsString("Embedded Cassandra started."));
 		assertThat(cassandraService.isRunning(), is(true));
 	}
@@ -86,6 +87,8 @@ public class CassandraAdminTest extends TestBase{
 	@Test
 	public void cassandraAdminStopOnStopedInstance() throws Exception {
 		cassandraService.stop();
+		
+		Thread.sleep(5000);
 		
 		assertThat(executeCommand("cassandra-admin:stop"), containsString("No runnung embedded Cassandra service found"));
 		cassandraService.start();

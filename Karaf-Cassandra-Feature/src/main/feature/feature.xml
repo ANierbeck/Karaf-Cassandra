@@ -32,6 +32,7 @@
 		<feature version="${project.version}">Karaf-Cassandra-Client</feature>
 		<bundle dependency="true">mvn:net.java.dev.jna/jna/${jna.version}</bundle>
 		<bundle dependency="true">mvn:io.netty/netty-transport-native-epoll/${netty.version}</bundle>
+		<bundle dependency="true">mvn:org.yaml/snakeyaml/${snakeyaml.version}</bundle>
 		<bundle>mvn:de.nierbeck.cassandra/Karaf-Cassandra-Embedded/${project.version}</bundle>
 	</feature>
 

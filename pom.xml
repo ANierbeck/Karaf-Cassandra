@@ -24,14 +24,14 @@
 
 	<properties>
 		<java.version>1.8</java.version>
-		<osgi.version>5.0.0</osgi.version>
-		<pax.exam.version>4.7.0</pax.exam.version>
+		<osgi.version>6.0.0</osgi.version>
+		<pax.exam.version>4.9.0-SNAPSHOT</pax.exam.version>
 		<pax.url.version>2.1.0</pax.url.version>
 		<logback.version>1.0.4</logback.version>
 		<slf4j.version>1.7.7</slf4j.version>
 		<karaf.version>4.0.3</karaf.version>
 		<junit.version>4.11</junit.version>
-		<cassandra.version>3.4</cassandra.version>
+		<cassandra.version>3.5</cassandra.version>
 		<cassandra-driver.version>3.0.0</cassandra-driver.version>
 		<hector.version>2.0-0</hector.version>
 		<inject.version>1.0</inject.version>
@@ -41,6 +41,7 @@
 		<guava.version>18.0</guava.version>
 		<sigar.version>1.6.4</sigar.version>
 		<jna.version>4.0.0</jna.version>
+		<snakeyaml.version>1.17</snakeyaml.version>
 	</properties>
 
 	<modules>
@@ -48,6 +49,7 @@
 		<module>Karaf-Cassandra-Shell</module>
 		<module>Karaf-Cassandra-Feature</module>
 		<module>Karaf-Cassandra-ITest</module>
+		<module>Cassandra-All-Shaded</module>
 	</modules>
 
 	<dependencyManagement>
@@ -71,13 +73,13 @@
 			<!-- OSGi -->
 			<dependency>
 				<groupId>org.osgi</groupId>
-				<artifactId>org.osgi.core</artifactId>
+				<artifactId>osgi.core</artifactId>
 				<version>${osgi.version}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.osgi</groupId>
-				<artifactId>org.osgi.compendium</artifactId>
+				<artifactId>osgi.cmpn</artifactId>
 				<version>${osgi.version}</version>
 				<scope>provided</scope>
 			</dependency>
@@ -200,6 +202,36 @@
 				<groupId>net.java.dev.jna</groupId>
 				<artifactId>jna</artifactId>
 				<version>${jna.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.yaml</groupId>
+				<artifactId>snakeyaml</artifactId>
+				<version>${snakeyaml.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${guava.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.netty</groupId>
+				<artifactId>netty-transport-native-epoll</artifactId>
+				<version>${netty.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.scala-lang</groupId>
+				<artifactId>scala-library</artifactId>
+				<version>2.11.8</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>2.4</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-configuration2</artifactId>
+				<version>2.0</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

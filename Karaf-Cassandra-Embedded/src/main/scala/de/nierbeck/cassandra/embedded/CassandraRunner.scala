@@ -9,6 +9,11 @@ import java.net.URI
 import java.io.InputStream
 import java.util.HashMap
 import scala.collection.JavaConverters._
+import org.osgi.framework.FrameworkUtil
+import org.yaml.snakeyaml.Yaml
+import org.apache.cassandra.config.Config
+import java.io.FileWriter
+import java.util.LinkedHashMap
 
 object CassandraRunner {
   import java.io._
@@ -76,16 +81,40 @@ class CassandraRunner(val configurationSource: InputStream, props: HashMap[Strin
   import CassandraRunner._
 
   private val properties = props.asScala
-  
+
   val startupTime = System.currentTimeMillis()
 
   var buffer = new StringBuffer
-  val urls = getClass.getClassLoader.asInstanceOf[URLClassLoader].getURLs
-  urls.foreach(url => buffer.append(new File(url.getPath)).append(System.getProperty("path.separator")))
+  val urls = FrameworkUtil.getBundle(getClass).findEntries("/lib", "Cassandra-All-Shaded*.jar", true).asScala
+  ////  val urls = getClass.getClassLoader.asInstanceOf[URLClassLoader].getURLs
+  //  urls.foreach(url => buffer.append(new File(url.getPath)).append(System.getProperty("path.separator")))
+  log.info("copying files from bundle to dataFolder")
+  urls.foreach { url =>
+    {
+      val fileName = new File(url.getPath);
+      val destination = new File("data/lib" + fileName);
+      FileUtils.copyURLToFile(url, destination)
+      buffer.append(destination).append(System.getProperty("path.separator"))
+    }
+  }
+
   val classPath = buffer.toString
 
   val destination: File = new File("data/cassandra.yaml")
-  FileUtils.copyInputStreamToFile(configurationSource, destination)
+
+  val yaml = new Yaml
+  val config:LinkedHashMap[String, String] = yaml.load(configurationSource).asInstanceOf[LinkedHashMap[String, String]]
+  val nativePort = properties.get("native_transport_port")
+  if (nativePort.isDefined && config.get("native_transport_port") != nativePort.get.toInt) {
+    config.put("native_transport_port", nativePort.get)
+  }
+  
+  yaml.dump(config, new FileWriter(destination))
+      
+  
+  val log4jPropertyfile = new File("data/cassandra_log4j.properties")
+  val logSource = FrameworkUtil.getBundle(getClass).getEntry("/cassandra_log4j.properties").openStream()
+  FileUtils.copyInputStreamToFile(logSource, log4jPropertyfile)
   
   log.debug(s"Classpath: ${classPath}")
 
@@ -97,7 +126,7 @@ class CassandraRunner(val configurationSource: InputStream, props: HashMap[Strin
   private val host = properties.getOrElse("listen_address", "127.0.0.1")
   private val sizeEstimatesUpdateIntervalProperty =
     s"-Dcassandra.size_recorder_interval=$SizeEstimatesUpdateIntervalInSeconds"
-  //  private val logConfigFileProperty = s"-Dlog4j.configuration=${getClass.getClassLoader.getResource("/cassandra-log4j.properties").toString}"
+  private val logConfigFileProperty = s"-Dlog4j.configuration=file:${log4jPropertyfile}"
   private val cassandraMainClass = "org.apache.cassandra.service.CassandraDaemon"
 
   private val process = new ProcessBuilder()
@@ -105,19 +134,18 @@ class CassandraRunner(val configurationSource: InputStream, props: HashMap[Strin
       javaBin,
       "-Xms512M", "-Xmx1G", "-Xmn384M", "-XX:+UseConcMarkSweepGC",
       sizeEstimatesUpdateIntervalProperty,
-      cassandraConfProperty, superuserSetupDelayProperty, jmxPortProperty, //logConfigFileProperty,
-      "-cp", classPath, cassandraMainClass, "-f"
-    )
+      cassandraConfProperty, superuserSetupDelayProperty, jmxPortProperty, logConfigFileProperty,
+      "-cp", classPath, cassandraMainClass)
     .inheritIO()
     .start()
 
-  val nativePort = properties.get("native_transport_port").get.toInt
-
-  if (!waitForPortOpen(InetAddress.getByName(properties.get("rpc_address").get), nativePort, 100000))
+  if (!waitForPortOpen(InetAddress.getByName(properties.get("rpc_address").get), nativePort.get.toInt, 100000))
     throw new IOException("Failed to start Cassandra.")
 
   def destroy() {
+    log.info("destroying process")
     process.destroy()
+    log.info("waiting for destruction of process")
     process.waitFor()
   }
 

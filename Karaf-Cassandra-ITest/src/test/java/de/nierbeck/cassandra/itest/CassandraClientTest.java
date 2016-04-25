@@ -75,7 +75,7 @@ public class CassandraClientTest extends TestBase{
 	@Test
 	public void cassandraCqlArgument() throws Exception {
 		executeCommand("cassandra:connect -p 9142 localhost");
-		assertThat(executeCommand("cassandra:cql \"SELECT keyspace_name FROM system.schema_keyspaces;\""), containsString("keyspace_name"));
+		assertThat(executeCommand("cassandra:cql \"SELECT keyspace_name FROM system_schema.keyspaces;\""), containsString("keyspace_name"));
 		executeCommand("cassandra:disconnect");
 	}
 	

@@ -1,1 +1,1 @@
-SELECT keyspace_name FROM system.schema_keyspaces;
+SELECT keyspace_name FROM system_schema.keyspaces;

@@ -71,6 +71,6 @@ public class CassandraCqlshTest extends TestBase{
 	
 	@Test
 	public void cassandraCqlSelect() throws Exception {
-		assertThat(executeCommand("SELECT * from system.schema_keyspaces;"), containsString("keyspace"));
+		assertThat(executeCommand("SELECT * from system_schema.keyspaces;"), containsString("keyspace"));
 	}
 }
